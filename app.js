@@ -162,7 +162,12 @@ function renderTable() {
             <td>$${stock.price}</td>
             <td style="color:var(--success);">+${stock.growth_5y_pct}%</td>
             <td>${stock.dividend_yield_pct}%</td>
-            <td><span class="modal-badge" style="font-size:0.8rem;">${stock.score}</span></td>
+            <td>
+                <span class="modal-badge" 
+                      style="font-size:0.8rem; background: ${stock.score >= 75 ? 'var(--success)' : stock.score >= 50 ? '#f59e0b' : '#ef4444'}; color: #fff;">
+                    ${stock.score}
+                </span>
+            </td>
             <td>
                 <button class="btn-view" onclick="openStockModalBySymbol('${stock.symbol}')">View</button>
             </td>
