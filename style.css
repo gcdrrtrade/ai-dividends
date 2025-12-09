@@ -541,48 +541,60 @@ select:focus {
     }
 
     .glass-header {
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1rem;
-        position: relative;
-        /* Unlock sticky if needed or keep sticky but smaller */
-    }
-
-    .header-center-widget {
-        position: static;
-        /* Remove absolute positioning */
-        transform: none;
-        order: 2;
-        /* Move below logo */
-        margin-bottom: 0.5rem;
+        flex-direction: row;
+        /* Keep row */
+        flex-wrap: wrap;
+        /* Allow wrapping */
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
     }
 
     .logo {
+        width: auto;
+        /* Allow natural width */
         order: 1;
-        width: 100%;
-        justify-content: center;
-    }
-
-    /* Hide empty spacer div on mobile if it exists */
-    .glass-header>div:last-child {
-        display: none;
+        /* First */
+        justify-content: flex-start;
     }
 
     .header-right {
-        order: 3;
-        width: 100%;
-        justify-content: center;
+        order: 2;
+        /* Second (Top Right) */
+        width: auto;
+        justify-content: flex-end;
         min-width: unset;
-        margin-top: 0.75rem;
-        /* Breathing room */
+        margin-top: 0;
+    }
+
+    .header-center-widget {
+        order: 3;
+        /* Third (New Line) */
+        width: 100%;
+        /* Force new line */
+        margin-top: 0.5rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        /* Divider */
+        flex-direction: row;
+        /* Horizontal time/date */
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .market-date,
+    .market-time {
+        font-size: 0.9rem;
+        /* Smaller text for single line */
     }
 
     .header-controls {
         margin-top: 0;
     }
 
-    #themeToggle {
-        position: static;
+    /* Hide empty spacer div on mobile if it exists */
+    .glass-header>div:last-child {
+        display: none;
     }
 
     .hero h1 {
