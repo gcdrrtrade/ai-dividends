@@ -172,17 +172,19 @@ def main():
     # Ordenar por puntuación (AI Score)
     results.sort(key=lambda x: x['score'], reverse=True)
     
-    # Limpiar NaN
-    def clean_nan(obj):
+    # Limpiar NaN e Infinity (JSON standard no soporta Infinity)
+    def clean_data(obj):
         if isinstance(obj, float):
-            return None if np.isnan(obj) else obj
+            if np.isnan(obj) or np.isinf(obj):
+                return None
+            return obj
         if isinstance(obj, dict):
-            return {k: clean_nan(v) for k, v in obj.items()}
+            return {k: clean_data(v) for k, v in obj.items()}
         if isinstance(obj, list):
-            return [clean_nan(i) for i in obj]
+            return [clean_data(i) for i in obj]
         return obj
 
-    cleaned_data = clean_nan(results)
+    cleaned_data = clean_data(results)
     
     # Estructura Final
     final_output = {
