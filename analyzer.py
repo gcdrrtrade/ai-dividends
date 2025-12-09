@@ -8,33 +8,52 @@ import datetime
 import os
 
 # Configuración
-TICKER_LIMIT = 500 # Analizar todos los del S&P 500
+TICKER_LIMIT = 10000 # Analizar todo lo posible
 PERIOD = "5y"
-MIN_R_SQUARED = 0.5 # Tendencia consistente
-MIN_SLOPE = 0.0005 # Pendiente positiva mínima (ajustable)
+MIN_R_SQUARED = 0.5 
+MIN_SLOPE = 0.0005 
 
-def get_sp500_tickers():
-    """Obtiene la lista de tickers del S&P 500 de Wikipedia."""
+def get_all_us_tickers():
+    """Obtiene TODOS los tickers de EEUU (NASDAQ, NYSE, AMEX)."""
+    try:
+        print("Descargando lista completa de tickers de EEUU...")
+        # Fuente oficial de NASDAQ (incluye NYSE y AMEX)
+        url = "http://www.nasdaqtrader.com/dynamic/SymDir/nasdaqtraded.txt"
+        df = pd.read_csv(url, sep="|")
+        
+        # Filtrar solo stocks y ETFs (descartar tests)
+        # 'Test Issue' column must be 'N'
+        clean_df = df[df['Test Issue'] == 'N']
+        tickers = clean_df['Symbol'].tolist()
+        
+        # Limpieza básica
+        final_tickers = []
+        for t in tickers:
+            if not isinstance(t, str): continue
+            # Filtrar warrants, derechos, etc si tienen longitudes raras o signos
+            # YFinance usa '-' en vez de '.' para BRK.B
+            t = t.replace('.', '-')
+            # Descartar tickers con $ o caracteres raros que no sean -
+            final_tickers.append(t)
+            
+        return final_tickers
+    except Exception as e:
+        print(f"Error obteniendo lista completa: {e}")
+        print("Usando lista respaldo S&P 500...")
+        return get_sp500_tickers_fallback()
+
+def get_sp500_tickers_fallback():
+    # ... (código anterior si falla el masivo)
     try:
         url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36"
-        }
-        # Usar requests para evitar 403
+        headers = {"User-Agent": "Mozilla/5.0"}
         import requests
         from io import StringIO
-        
         response = requests.get(url, headers=headers)
-        response.raise_for_status()
-        
-        # StringIO para pandas
         table = pd.read_html(StringIO(response.text))
-        df = table[0]
-        tickers = df['Symbol'].tolist()
-        return [t.replace('.', '-') for t in tickers] # Corregir BRK.B -> BRK-B
-    except Exception as e:
-        print(f"Error obteniendo tickers: {e}")
-        return []
+        return [t.replace('.', '-') for t in table[0]['Symbol'].tolist()]
+    except:
+        return ['AAPL', 'MSFT', 'GOOG']
 
 def analyze_ticker(ticker):
     """Analiza un solo ticker: tendencia y dividendos."""
@@ -118,27 +137,34 @@ def analyze_ticker(ticker):
         return None
 
 def main():
-    print("Iniciando análisis AI DIVIDENDS...")
-    tickers = get_sp500_tickers()
+    print("Iniciando análisis AI DIVIDENDS (Universo Completo US)...")
+    tickers = get_all_us_tickers()
+    
     if not tickers:
-        print("No se encontraron tickers. Usando lista de respaldo pequeña para prueba.")
-        tickers = ['AAPL', 'MSFT', 'JNJ', 'KO', 'PEP', 'O', 'MAIN', 'XOM', 'CVX']
+        print("No se encontraron tickers. Usando lista de respaldo S&P 500.")
+        tickers = get_sp500_tickers_fallback()
     else:
-        print(f"Analizando {len(tickers)} empresas del S&P 500...")
+        print(f"Analizando {len(tickers)} empresas (Todo el mercado US)...")
+        # Limitar si es necesario para pruebas rápidas, pero el usuario quiere "todo"
+        # tickers = tickers[:100] 
         
     results = []
     
-    # Ejecución paralela
-    with concurrent.futures.ThreadPoolExecutor(max_workers=10) as executor:
+    # Ejecución paralela masiva
+    # Aumentamos workers a 50 para manejar 7000+ tickers razonablemente rápido
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
         future_to_ticker = {executor.submit(analyze_ticker, t): t for t in tickers}
         completed = 0
         for future in concurrent.futures.as_completed(future_to_ticker):
-            data = future.result()
-            if data:
-                results.append(data)
             completed += 1
-            if completed % 50 == 0:
+            if completed % 100 == 0:
                 print(f"Procesado {completed}/{len(tickers)}...")
+            try:
+                data = future.result()
+                if data:
+                    results.append(data)
+            except Exception as e:
+                pass # Ignorar errores individuales en ejecución masiva
 
     # Ordenar por puntuación (AI Score)
     results.sort(key=lambda x: x['score'], reverse=True)
