@@ -573,6 +573,8 @@ select:focus {
         width: 100%;
         justify-content: center;
         min-width: unset;
+        margin-top: 0.75rem;
+        /* Breathing room */
     }
 
     .header-controls {
