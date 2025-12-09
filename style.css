@@ -568,6 +568,9 @@ select:focus {
     }
 
     .header-center-widget {
+        position: static;
+        /* Vital: Reset absolute desktop positioning */
+        transform: none;
         order: 3;
         /* Third (New Line) */
         width: 100%;
