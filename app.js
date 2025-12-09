@@ -165,6 +165,7 @@ function renderTable() {
                 ${stock.growth_5y_pct >= 0 ? '+' : ''}${stock.growth_5y_pct}%
             </td>
             <td>${stock.dividend_yield_pct}%</td>
+            <td style="font-size:0.85rem; color:var(--text-muted);">${stock.ex_div_date || 'N/A'}</td>
             <td>
                 <span style="font-weight:600; font-size:0.75rem; color:${stock.tv_signal && stock.tv_signal.includes('BUY') ? 'var(--success)' : stock.tv_signal && stock.tv_signal.includes('SELL') ? '#ef4444' : '#9ca3af'};">
                     ${stock.tv_signal ? stock.tv_signal.replace(/_/g, ' ') : 'NEUTRAL'}
@@ -201,10 +202,10 @@ function applyFilters() {
 
         if (!matchesSearch) return false;
 
-        // Date Filter
+        // Date Filter (Keep this for the dropdown filter logic)
         if (dateVal === 'all') return true;
 
-        if (!s.ex_div_date || s.ex_div_date === 'N/A') return false;
+        if (!s.ex_div_date || s.ex_div_date === 'N/A' || s.ex_div_date === 'Check TV') return false;
 
         const divDate = new Date(s.ex_div_date);
         const today = new Date();
@@ -241,6 +242,18 @@ function handleSort(e) {
         if (sortKey === 'score') return b.score - a.score;
         if (sortKey === 'yield') return b.dividend_yield_pct - a.dividend_yield_pct;
         if (sortKey === 'growth') return b.growth_5y_pct - a.growth_5y_pct;
+        if (sortKey === 'date') {
+            // Sort by Date (Nearest to Future first, or just Ascending?)
+            // Usually ascending (soonest date first) is better for dividend calendar
+            // BUT "N/A" or "Check TV" should be last.
+            const dateA = new Date(a.ex_div_date || '2099-01-01');
+            const dateB = new Date(b.ex_div_date || '2099-01-01');
+            // If invalid date, treat as far future
+            const valA = isNaN(dateA) ? 9999999999999 : dateA.getTime();
+            const valB = isNaN(dateB) ? 9999999999999 : dateB.getTime();
+
+            return valA - valB; // Ascending (Soonest first)
+        }
         return 0;
     });
     renderTable();
