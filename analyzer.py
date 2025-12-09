@@ -1,23 +1,13 @@
-import yfinance as yf
+import requests
+import json
+import datetime
 import pandas as pd
 import numpy as np
-from scipy import stats
-from scipy.stats import linregress
-import json
-import concurrent.futures
-import datetime
-import os
-import math
-from tradingview_ta import TA_Handler, Interval, Exchange
+import time
 
 # Configuración
-TICKER_LIMIT = 600 
-PERIOD = "5y"
-MIN_R_SQUARED = 0.5 # Volvemos a un valor equilibrado para S&P 500
-MIN_SLOPE = 0.0005 
-# Filtros de Calidad (Opcionales para S&P 500 ya que son grandes, pero mantenemos limpieza)
-MIN_MARKET_CAP = 5_000_000_000 # 5B (S&P 500 suele ser >13B, bajamos un poco por si acaso)
-MAX_BETA = 2.0 # Más tolerante con la volatilidad dentro del índice
+TICKER_LIMIT = 600
+MIN_MARKET_CAP = 5_000_000_000
 
 def get_sp500_tickers():
     """Obtiene la lista oficial de tickers del S&P 500."""
@@ -25,192 +15,188 @@ def get_sp500_tickers():
         print("Obteniendo tickers del S&P 500...")
         url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
         headers = {"User-Agent": "Mozilla/5.0"}
-        import requests
-        from io import StringIO
         response = requests.get(url, headers=headers)
-        table = pd.read_html(StringIO(response.text))
+        table = pd.read_html(response.text)
         return [t.replace('.', '-') for t in table[0]['Symbol'].tolist()]
     except Exception as e:
         print(f"Error obteniendo S&P 500: {e}")
-        return ['AAPL', 'MSFT', 'GOOG', 'JNJ', 'KO'] # Fallback mínimo
+        return ['AAPL', 'MSFT', 'GOOG', 'JNJ', 'KO', 'PEP', 'O', 'XOM', 'CVX']
 
-# (Deleted get_all_us_tickers to avoid confusion/timeout)
+def fetch_tv_data_batch(tickers):
+    """Obtiene datos fundamentales y técnicos de TradingView para una lista de tickers."""
+    url = "https://scanner.tradingview.com/america/scan"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
 
-def analyze_ticker(ticker):
-    """Analiza un solo ticker: TradingView TA + Yahoo Finance Dividends."""
-    try:
-        # 1. TradingView Technical Analysis (REAL TIME FROM TRADINGVIEW)
-        try:
-            handler = TA_Handler(
-                symbol=ticker,
-                exchange="NASDAQ", # Default, might need dynamic adjustment for NYSE
-                screener="america",
-                interval=Interval.INTERVAL_1_WEEK # Long term view
-            )
-            analysis = handler.get_analysis()
-            tv_recommendation = analysis.summary.get('RECOMMENDATION', 'NEUTRAL')
-            tv_buy_score = analysis.summary.get('BUY', 0)
-            tv_sell_score = analysis.summary.get('SELL', 0)
-        except:
-            # Fallback if TV fails (or symbol is on NYSE/AMEX and mapped wrongly)
-            tv_recommendation = "UNKNOWN"
-            tv_buy_score = 0
-        
-        # 2. Yahoo Finance Data (Dividends & Fundamentals)
-        stock = yf.Ticker(ticker)
-        info = stock.info
-        
-        # 2. Filtro de Calidad (Market Cap) - S&P 500 ya garantiza cierto tamaño, pero mantenemos limpieza básica
-        market_cap = info.get('marketCap', 0)
-        
-        # Filtro básico de seguridad (evitar datos erróneos de empresas vacías)
-        if not market_cap or market_cap < MIN_MARKET_CAP:
-            return None
+    # Columnas solicitadas (Mapped to TV Scanner fields)
+    columns = [
+        "name", "close", "market_cap_basic", "dividend_yield_recent", 
+        "Recommend.All", "Perf.5Y", "Volatility.M", "average_volume_10d_calc",
+        "description", "sector", "dividend_ex_date_recent"
+    ]
 
-        # NO filtramos por Beta, Slope o R_Squared para cumplir con el requisito de "Todas las empresas que repartan dividendos"
-        # Estos factores ahora solo afectarán al AI SCORE, no a la inclusión en la lista.
-
-        # 3. Análisis de Tendencia (5 años) - Calculamos pero NO excluimos
-        hist = stock.history(period=PERIOD)
-        if len(hist) < 250:  # Al menos un año de datos
-            return None  # Si ni siquiera tiene historia, mejor ignorar
+    all_data = []
+    
+    # Generate candidates with both NASDAQ and NYSE prefixes to ensure we find the stock
+    # S&P 500 mix is approx 70% NYSE, 30% NASDAQ.
+    candidates = []
+    for t in tickers:
+        candidates.append(f"NASDAQ:{t}")
+        candidates.append(f"NYSE:{t}")
+        # AMEX is rare in S&P 500 but if missing we could add AMEX:{t} too
+    
+    # Procesar en lotes de 200 (100 pairs)
+    chunk_size = 200 
+    for i in range(0, len(candidates), chunk_size):
+        chunk = candidates[i:i + chunk_size]
         
-        closes = hist['Close'].tolist()
-        x = np.arange(len(closes))
-        slope, intercept, r_value, p_value, std_err = stats.linregress(x, closes)
-        
-        # 4. Datos de Dividendos
-        dividend_yield = info.get('dividendYield', 0)
-        
-        # REQUISITO CRÍTICO: "Que repartan dividendos"
-        # Si no tiene yield, intentamos calcularlo con histórico
-        if not dividend_yield:
-            divs = stock.dividends
-            if len(divs) > 0:
-                last_year_divs = divs.iloc[-4:].sum() # Aprox último año
-                current_price = closes[-1]
-                if current_price > 0:
-                    dividend_yield = last_year_divs / current_price
-        
-        # Si después de intentar calcularlo sigue siendo 0 o None, SE EXCLUYE.
-        if not dividend_yield or dividend_yield <= 0:
-            return None
-
-        ex_div_timestamp = info.get('exDividendDate', None)
-        dividend_rate_annual = info.get('dividendRate', 0)
-        
-        last_div_amount = 0
-        try:
-            divs = stock.dividends
-            if not divs.empty: last_div_amount = divs.iloc[-1]
-        except: pass
-            
-        est_payment_amt = last_div_amount
-        if dividend_rate_annual and dividend_rate_annual > 0:
-            if abs((last_div_amount * 4) - dividend_rate_annual) < 0.1:
-                 est_payment_amt = last_div_amount
-            else:
-                 est_payment_amt = round(dividend_rate_annual / 4, 2)
-
-        ex_div_str = "N/A"
-        if ex_div_timestamp:
-            ex_div_str = datetime.datetime.fromtimestamp(ex_div_timestamp).strftime('%Y-%m-%d')
-            
-        start_price = closes[0]
-        end_price = closes[-1]
-        growth_pct = ((end_price - start_price) / start_price) * 100
-        
-        # SCORING FORMULA (0-100)
-        # Base: Trend (50 pts) + Dividend (20 pts)
-        # Bonus: TradingView Signal (Strong Buy = +30 pts, Buy = +15 pts)
-        
-        base_score = (r_value**2 * 50) + (min(dividend_yield or 0, 0.10) * 200)
-        tv_bonus = 0
-        if 'STRONG_BUY' in tv_recommendation: tv_bonus = 30
-        elif 'BUY' in tv_recommendation: tv_bonus = 15
-        elif 'SELL' in tv_recommendation: tv_bonus = -10
-        
-        final_score = base_score + tv_bonus
-        final_score = max(0, min(100, final_score)) # Clamp 0-100
-
-        return {
-            'symbol': ticker,
-            'name': info.get('shortName', ticker),
-            'price': round(end_price, 2),
-            'slope': round(slope, 4),
-            'r_squared': round(r_value**2, 4),
-            'growth_5y_pct': round(growth_pct, 2),
-            'dividend_yield_pct': round((dividend_yield or 0) * 100, 2),
-            'ex_div_date': ex_div_str,
-            'est_next_payment': round(est_payment_amt, 3),
-            'annual_dividend': dividend_rate_annual,
-            'sector': info.get('sector', 'Unknown'),
-            'tv_signal': tv_recommendation, # NEW FIELD
-            'score': round(final_score, 1)
+        payload = {
+            "symbols": {"tickers": chunk},
+            "columns": columns
         }
-    except Exception as e:
-        return None
+        
+        try:
+            # print(f"Solicitando lote {i // chunk_size + 1} ({len(chunk)} candidatos)...") 
+            resp = requests.post(url, headers=headers, json=payload, timeout=20)
+            if resp.status_code == 200:
+                data = resp.json()
+                if 'data' in data:
+                    all_data.extend(data['data'])
+            else:
+                print(f"Error batch {i}: {resp.status_code}")
+            
+            time.sleep(0.5) 
+            
+        except Exception as e:
+            print(f"Excepción en lote {i}: {e}")
+
+    return all_data
+
+def process_results(tv_results):
+    processed_map = {} # Deduplicate by symbol
+    
+    for item in tv_results:
+        try:
+            d = item['d']
+            full_symbol = d[0] # "NASDAQ:AAPL"
+            clean_symbol = full_symbol.split(':')[1] if ':' in full_symbol else full_symbol
+            
+            # If we already have this symbol processed, skip (or overwrite if this exchange is preferred?)
+            # Usually only one works. If both return data, it's a dual listing.
+            if clean_symbol in processed_map:
+                continue
+                
+            price = d[1]
+            market_cap = d[2]
+            div_yield = d[3] if d[3] is not None else 0
+            rec_score = d[4] if d[4] is not None else 0
+            perf_5y = d[5] if d[5] is not None else 0
+            volatility_m = d[6] if d[6] is not None else 0
+            # volume = d[7]
+            name = d[8]
+            sector = d[9]
+            ex_div_ts = d[10]
+
+            # Filters
+            if not market_cap or market_cap < MIN_MARKET_CAP: continue
+            if not div_yield or div_yield <= 0: continue # Must pay dividend
+
+            # Normalizations
+            # Div Yield from TV is often percentage (0-100) or decimal? 
+            # In debug: AAPL 0.37. AAPL yield is ~0.5%. Usually TV returns percentage. 0.37 means 0.37%.
+            
+            # Recommendation
+            tv_signal = "NEUTRAL"
+            if rec_score > 0.5: tv_signal = "STRONG_BUY"
+            elif rec_score > 0.1: tv_signal = "BUY"
+            elif rec_score < -0.5: tv_signal = "STRONG_SELL"
+            elif rec_score < -0.1: tv_signal = "SELL"
+            
+            # AI Score Calculation
+            score_growth = min(max(perf_5y, 0), 100) * 0.4 
+            
+            score_stability = 0
+            if volatility_m > 0:
+                score_stability = max(0, 40 - (volatility_m * 4)) 
+            
+            score_yield = min(div_yield * 5, 20)
+            
+            score_signal = 0
+            if "BUY" in tv_signal: score_signal = 10
+            if "STRONG_BUY" in tv_signal: score_signal = 20
+            
+            raw_score = score_growth + score_stability + score_yield + score_signal
+            final_score = min(round(raw_score), 100)
+
+            # Dates
+            ex_div_str = "N/A"
+            if ex_div_ts:
+                try:
+                    # TV might return seconds
+                    dt = datetime.datetime.fromtimestamp(ex_div_ts)
+                    ex_div_str = dt.strftime('%Y-%m-%d')
+                except:
+                    pass
+
+            processed_map[clean_symbol] = {
+                'symbol': clean_symbol,
+                'name': name,
+                'price': float(price),
+                'slope': round(perf_5y / 100, 4), # Proxy for slope
+                'r_squared': round(1.0 / (volatility_m if volatility_m > 0 else 1), 2), # Proxy
+                'growth_5y_pct': round(perf_5y, 2),
+                'dividend_yield_pct': round(div_yield, 2),
+                'start_price': 0, # Legacy
+                'end_price': price,
+                'ex_div_date': ex_div_str,
+                'est_next_payment': round(div_yield / 100 * price / 4, 3), # Approx quarterly
+                'annual_dividend': round(div_yield / 100 * price, 2),
+                'sector': sector,
+                'tv_signal': tv_signal,
+                'score': final_score
+            }
+            
+        except Exception as e:
+            continue
+            
+    return list(processed_map.values())
 
 def main():
-    print("Iniciando análisis AI DIVIDENDS (S&P 500)...")
+    print("Iniciando análisis AI DIVIDENDS (TradingView Native)...")
     tickers = get_sp500_tickers()
     
     if not tickers:
-        print("No se encontraron tickers. Usando lista de respaldo.")
-        tickers = ['AAPL', 'MSFT', 'JNJ', 'KO', 'PEP', 'O', 'XOM', 'CVX']
-    else:
-        print(f"Analizando {len(tickers)} empresas del S&P 500...")
-        
-    results = []
-    
-    # Ejecución paralela
-    # 20 workers es seguro y rápido para 500 items
-    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
-        future_to_ticker = {executor.submit(analyze_ticker, t): t for t in tickers}
-        completed = 0
-        for future in concurrent.futures.as_completed(future_to_ticker):
-            completed += 1
-            if completed % 50 == 0:
-                print(f"Procesado {completed}/{len(tickers)}...")
-            try:
-                data = future.result()
-                if data:
-                    results.append(data)
-            except Exception as e:
-                pass 
+        print("Error crítico: No se pudieron obtener tickers.")
+        return
 
-    # Ordenar por puntuación (AI Score)
+    print(f"Ticker count: {len(tickers)}")
+    
+    # Batch processing
+    raw_data = fetch_tv_data_batch(tickers)
+    
+    # Process
+    results = process_results(raw_data)
+    
+    # Sort by Score
     results.sort(key=lambda x: x['score'], reverse=True)
     
-    # Limpiar NaN e Infinity (JSON standard no soporta Infinity)
-    def clean_data(obj):
-        if isinstance(obj, float):
-            if np.isnan(obj) or np.isinf(obj):
-                return None
-            return obj
-        if isinstance(obj, dict):
-            return {k: clean_data(v) for k, v in obj.items()}
-        if isinstance(obj, list):
-            return [clean_data(i) for i in obj]
-        return obj
-
-    cleaned_data = clean_data(results)
-    
-    # Estructura Final
+    # Output structure
     final_output = {
         "metadata": {
             "last_updated": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            "total_analyzed": len(tickers)
+            "total_analyzed": len(raw_data)
         },
-        "data": cleaned_data
+        "data": results
     }
 
-    # Guardar JSON
+    # Save
     with open('stocks_data.json', 'w') as f:
         json.dump(final_output, f, indent=2)
         
     print(f"Análisis completado. {len(results)} empresas seleccionadas.")
-    print(f"Datos guardados en stocks_data.json con timestamp.")
+    print("Datos guardados en stocks_data.json.")
 
 if __name__ == "__main__":
     main()
