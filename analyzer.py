@@ -129,7 +129,10 @@ def analyze_ticker(ticker):
             'est_next_payment': round(est_payment_amt, 3), # Mostrar 3 decimales si es necesario
             'annual_dividend': dividend_rate_annual,
             'sector': info.get('sector', 'Unknown'),
-            'score': round((r_value**2 * 100) + ((dividend_yield or 0) * 1000), 2)
+            # Puntuación 0-100
+            # 70% basado en consistencia de tendencia (R^2)
+            # 30% basado en Dividend Yield (Capped at 10% yield = 30 pts)
+            'score': round((r_value**2 * 70) + (min(dividend_yield or 0, 0.10) * 300), 1)
         }
         
     except Exception as e:

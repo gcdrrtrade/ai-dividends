@@ -153,14 +153,16 @@ function renderTable() {
         const tr = document.createElement('tr');
 
         tr.innerHTML = `
-            <td style="font-weight:700; color:var(--primary);">${stock.symbol}</td>
-            <td style="color:#ddd;">${stock.name}</td>
+            <td>
+                <div style="display:flex; flex-direction:column;">
+                    <span style="font-weight:700; color:var(--primary); font-size:1rem;">${stock.symbol}</span>
+                    <span style="font-size:0.75rem; color:var(--text-muted);">${stock.name}</span>
+                </div>
+            </td>
             <td>$${stock.price}</td>
-            <td>${stock.slope}</td>
             <td style="color:var(--success);">+${stock.growth_5y_pct}%</td>
             <td>${stock.dividend_yield_pct}%</td>
-            <td>${stock.ex_div_date || 'N/A'}</td>
-            <td><span class="modal-badge" style="font-size:0.75rem;">${stock.score}</span></td>
+            <td><span class="modal-badge" style="font-size:0.8rem;">${stock.score}</span></td>
             <td>
                 <button class="btn-view" onclick="openStockModalBySymbol('${stock.symbol}')">View</button>
             </td>

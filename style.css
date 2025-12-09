@@ -169,6 +169,54 @@ body {
     color: var(--success);
 }
 
+/* Tooltip Styling */
+.tooltip-container {
+    position: relative;
+    cursor: help;
+    border-bottom: 1px dotted var(--text-muted);
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+}
+
+.tooltip-text {
+    visibility: hidden;
+    width: 250px;
+    background-color: var(--card-bg);
+    color: var(--text-main);
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%) translateY(0);
+    opacity: 0;
+    transition: opacity 0.3s, transform 0.3s;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    font-size: 0.8rem;
+    font-weight: 400;
+    line-height: 1.4;
+    pointer-events: none;
+}
+
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--glass-border) transparent transparent transparent;
+}
+
 /* Top Picks */
 .top-picks {
     margin-top: 5rem;
