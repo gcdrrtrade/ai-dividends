@@ -301,13 +301,18 @@ function loadTradingViewWidget(symbol) {
         "interval": "D",
         "timezone": "Etc/UTC",
         "theme": "dark",
-        "style": "1",
+        "style": "1", // Line chart is 2, Candles is 1
         "locale": "en",
         "enable_publishing": false,
-        "hide_side_toolbar": false,
-        "allow_symbol_change": true,
+        "hide_top_toolbar": true,
+        "hide_legend": true,
+        "save_image": false,
+        "hide_volume": true,
+        "scalePosition": "right",
         "calendar": false,
-        "support_host": "https://www.tradingview.com"
+        "support_host": "https://www.tradingview.com",
+        "withdateranges": true, // Show bottom timeline ranges (1D 5D 1M etc)
+        "range": "12M" // Default range
     });
     container.appendChild(script);
 }
