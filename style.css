@@ -551,38 +551,36 @@ select:focus {
     }
 
     .logo {
-        width: auto;
-        /* Allow natural width */
+        width: 100%;
         order: 1;
-        /* First */
-        justify-content: flex-start;
-    }
-
-    .header-right {
-        order: 2;
-        /* Second (Top Right) */
-        width: auto;
-        justify-content: flex-end;
-        min-width: unset;
-        margin-top: 0;
+        justify-content: center;
+        margin-bottom: 0.5rem;
     }
 
     .header-center-widget {
         position: static;
-        /* Vital: Reset absolute desktop positioning */
         transform: none;
-        order: 3;
-        /* Third (New Line) */
+        order: 2;
+        /* Move Date to Middle */
         width: 100%;
-        /* Force new line */
-        margin-top: 0.5rem;
-        padding-top: 0.5rem;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        /* Divider */
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
         flex-direction: row;
-        /* Horizontal time/date */
         justify-content: center;
         gap: 1rem;
+    }
+
+    .header-right {
+        order: 3;
+        /* Move Flags to Bottom */
+        width: 100%;
+        justify-content: center;
+        /* Center flags */
+        margin-top: 0.75rem;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        /* Separator for flags */
     }
 
     .market-date,
