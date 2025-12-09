@@ -163,6 +163,11 @@ function renderTable() {
             <td style="color:var(--success);">+${stock.growth_5y_pct}%</td>
             <td>${stock.dividend_yield_pct}%</td>
             <td>
+                <span style="font-weight:600; font-size:0.75rem; color:${stock.tv_signal && stock.tv_signal.includes('BUY') ? 'var(--success)' : stock.tv_signal && stock.tv_signal.includes('SELL') ? '#ef4444' : '#f59e0b'};">
+                    ${stock.tv_signal ? stock.tv_signal.replace(/_/g, ' ') : 'NEUTRAL'}
+                </span>
+            </td>
+            <td>
                 <span class="modal-badge" 
                       style="font-size:0.8rem; background: ${stock.score >= 75 ? 'var(--success)' : stock.score >= 50 ? '#f59e0b' : '#ef4444'}; color: #fff;">
                     ${stock.score}

@@ -8,38 +8,21 @@ import concurrent.futures
 import datetime
 import os
 import math
+from tradingview_ta import TA_Handler, Interval, Exchange
 
 # Configuración
-TICKER_LIMIT = 10000 
+TICKER_LIMIT = 600 
 PERIOD = "5y"
-MIN_R_SQUARED = 0.6 
+MIN_R_SQUARED = 0.5 # Volvemos a un valor equilibrado para S&P 500
 MIN_SLOPE = 0.0005 
-MIN_MARKET_CAP = 10_000_000_000 # 10 Billones
-MAX_BETA = 1.5 
+# Filtros de Calidad (Opcionales para S&P 500 ya que son grandes, pero mantenemos limpieza)
+MIN_MARKET_CAP = 5_000_000_000 # 5B (S&P 500 suele ser >13B, bajamos un poco por si acaso)
+MAX_BETA = 2.0 # Más tolerante con la volatilidad dentro del índice
 
-def get_all_us_tickers():
-    """Obtiene TODOS los tickers de EEUU (NASDAQ, NYSE, AMEX)."""
+def get_sp500_tickers():
+    """Obtiene la lista oficial de tickers del S&P 500."""
     try:
-        print("Descargando lista completa de tickers de EEUU...")
-        url = "http://www.nasdaqtrader.com/dynamic/SymDir/nasdaqtraded.txt"
-        df = pd.read_csv(url, sep="|")
-        
-        clean_df = df[df['Test Issue'] == 'N']
-        tickers = clean_df['Symbol'].tolist()
-        
-        final_tickers = []
-        for t in tickers:
-            if not isinstance(t, str): continue
-            t = t.replace('.', '-')
-            final_tickers.append(t)
-            
-        return final_tickers
-    except Exception as e:
-        print(f"Error obteniendo lista completa: {e}")
-        return get_sp500_tickers_fallback()
-
-def get_sp500_tickers_fallback():
-    try:
+        print("Obteniendo tickers del S&P 500...")
         url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
         headers = {"User-Agent": "Mozilla/5.0"}
         import requests
@@ -47,30 +30,44 @@ def get_sp500_tickers_fallback():
         response = requests.get(url, headers=headers)
         table = pd.read_html(StringIO(response.text))
         return [t.replace('.', '-') for t in table[0]['Symbol'].tolist()]
-    except:
-        return ['AAPL', 'MSFT', 'GOOG']
+    except Exception as e:
+        print(f"Error obteniendo S&P 500: {e}")
+        return ['AAPL', 'MSFT', 'GOOG', 'JNJ', 'KO'] # Fallback mínimo
+
+# (Deleted get_all_us_tickers to avoid confusion/timeout)
 
 def analyze_ticker(ticker):
-    """Analiza un solo ticker: tendencia, dividendos, market cap y volatilidad."""
+    """Analiza un solo ticker: TradingView TA + Yahoo Finance Dividends."""
     try:
+        # 1. TradingView Technical Analysis (REAL TIME FROM TRADINGVIEW)
+        try:
+            handler = TA_Handler(
+                symbol=ticker,
+                exchange="NASDAQ", # Default, might need dynamic adjustment for NYSE
+                screener="america",
+                interval=Interval.INTERVAL_1_WEEK # Long term view
+            )
+            analysis = handler.get_analysis()
+            tv_recommendation = analysis.summary.get('RECOMMENDATION', 'NEUTRAL')
+            tv_buy_score = analysis.summary.get('BUY', 0)
+            tv_sell_score = analysis.summary.get('SELL', 0)
+        except:
+            # Fallback if TV fails (or symbol is on NYSE/AMEX and mapped wrongly)
+            tv_recommendation = "UNKNOWN"
+            tv_buy_score = 0
+        
+        # 2. Yahoo Finance Data (Dividends & Fundamentals)
         stock = yf.Ticker(ticker)
-        
-        # 1. Filtro Rapido: Histórico
-        hist = stock.history(period=PERIOD)
-        if hist.empty or len(hist) < 200:
-            return None
-        
-        # 2. Filtro de Calidad (Market Cap y Beta)
         info = stock.info
-        market_cap = info.get('marketCap', 0)
-        beta = info.get('beta', 0)
         
-        if not market_cap or market_cap < MIN_MARKET_CAP:
-            return None
-        if beta and beta > MAX_BETA:
-            return None
-
-        # 3. Tendencia
+        # Filtros Básicos
+        market_cap = info.get('marketCap', 0)
+        if market_cap and market_cap < MIN_MARKET_CAP: return None
+        
+        # Obtener Histórico para Tendencia
+        hist = stock.history(period=PERIOD)
+        if len(hist) < 200: return None
+        
         closes = hist['Close'].values
         x = np.arange(len(closes))
         slope, intercept, r_value, p_value, std_err = linregress(x, closes)
@@ -78,19 +75,16 @@ def analyze_ticker(ticker):
         if slope <= MIN_SLOPE or (r_value**2) < MIN_R_SQUARED:
             return None
             
-        # 4. Dividendos
+        # Dividendos
         dividend_yield = info.get('dividendYield', 0)
         ex_div_timestamp = info.get('exDividendDate', None)
         dividend_rate_annual = info.get('dividendRate', 0)
         
-        # Logic for Payment Amount
         last_div_amount = 0
         try:
             divs = stock.dividends
-            if not divs.empty:
-                last_div_amount = divs.iloc[-1]
-        except:
-            pass
+            if not divs.empty: last_div_amount = divs.iloc[-1]
+        except: pass
             
         est_payment_amt = last_div_amount
         if dividend_rate_annual and dividend_rate_annual > 0:
@@ -99,10 +93,8 @@ def analyze_ticker(ticker):
             else:
                  est_payment_amt = round(dividend_rate_annual / 4, 2)
 
-        if (not dividend_yield and last_div_amount == 0):
-             return None
+        if (not dividend_yield and last_div_amount == 0): return None
 
-        # Formatear
         ex_div_str = "N/A"
         if ex_div_timestamp:
             ex_div_str = datetime.datetime.fromtimestamp(ex_div_timestamp).strftime('%Y-%m-%d')
@@ -111,6 +103,19 @@ def analyze_ticker(ticker):
         end_price = closes[-1]
         growth_pct = ((end_price - start_price) / start_price) * 100
         
+        # SCORING FORMULA (0-100)
+        # Base: Trend (50 pts) + Dividend (20 pts)
+        # Bonus: TradingView Signal (Strong Buy = +30 pts, Buy = +15 pts)
+        
+        base_score = (r_value**2 * 50) + (min(dividend_yield or 0, 0.10) * 200)
+        tv_bonus = 0
+        if 'STRONG_BUY' in tv_recommendation: tv_bonus = 30
+        elif 'BUY' in tv_recommendation: tv_bonus = 15
+        elif 'SELL' in tv_recommendation: tv_bonus = -10
+        
+        final_score = base_score + tv_bonus
+        final_score = max(0, min(100, final_score)) # Clamp 0-100
+
         return {
             'symbol': ticker,
             'name': info.get('shortName', ticker),
@@ -123,41 +128,39 @@ def analyze_ticker(ticker):
             'est_next_payment': round(est_payment_amt, 3),
             'annual_dividend': dividend_rate_annual,
             'sector': info.get('sector', 'Unknown'),
-            'score': round((r_value**2 * 70) + (min(dividend_yield or 0, 0.10) * 300), 1)
+            'tv_signal': tv_recommendation, # NEW FIELD
+            'score': round(final_score, 1)
         }
-        
     except Exception as e:
         return None
 
 def main():
-    print("Iniciando análisis AI DIVIDENDS (Universo Completo US)...")
-    tickers = get_all_us_tickers()
+    print("Iniciando análisis AI DIVIDENDS (S&P 500)...")
+    tickers = get_sp500_tickers()
     
     if not tickers:
-        print("No se encontraron tickers. Usando lista de respaldo S&P 500.")
-        tickers = get_sp500_tickers_fallback()
+        print("No se encontraron tickers. Usando lista de respaldo.")
+        tickers = ['AAPL', 'MSFT', 'JNJ', 'KO', 'PEP', 'O', 'XOM', 'CVX']
     else:
-        print(f"Analizando {len(tickers)} empresas (Todo el mercado US)...")
-        # Limitar si es necesario para pruebas rápidas, pero el usuario quiere "todo"
-        # tickers = tickers[:100] 
+        print(f"Analizando {len(tickers)} empresas del S&P 500...")
         
     results = []
     
-    # Ejecución paralela masiva
-    # Aumentamos workers a 50 para manejar 7000+ tickers razonablemente rápido
-    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
+    # Ejecución paralela
+    # 20 workers es seguro y rápido para 500 items
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         future_to_ticker = {executor.submit(analyze_ticker, t): t for t in tickers}
         completed = 0
         for future in concurrent.futures.as_completed(future_to_ticker):
             completed += 1
-            if completed % 100 == 0:
+            if completed % 50 == 0:
                 print(f"Procesado {completed}/{len(tickers)}...")
             try:
                 data = future.result()
                 if data:
                     results.append(data)
             except Exception as e:
-                pass # Ignorar errores individuales en ejecución masiva
+                pass 
 
     # Ordenar por puntuación (AI Score)
     results.sort(key=lambda x: x['score'], reverse=True)

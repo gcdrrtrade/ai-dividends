@@ -1,4 +1,5 @@
-yfinance
 pandas
 scipy
-numpy
+lxml
+requests
+tradingview-ta
