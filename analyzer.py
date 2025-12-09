@@ -1,49 +1,44 @@
 import yfinance as yf
 import pandas as pd
 import numpy as np
+from scipy import stats
 from scipy.stats import linregress
 import json
 import concurrent.futures
 import datetime
 import os
+import math
 
 # Configuración
-TICKER_LIMIT = 10000 # Analizar todo lo posible
+TICKER_LIMIT = 10000 
 PERIOD = "5y"
-MIN_R_SQUARED = 0.5 
+MIN_R_SQUARED = 0.6 
 MIN_SLOPE = 0.0005 
+MIN_MARKET_CAP = 10_000_000_000 # 10 Billones
+MAX_BETA = 1.5 
 
 def get_all_us_tickers():
     """Obtiene TODOS los tickers de EEUU (NASDAQ, NYSE, AMEX)."""
     try:
         print("Descargando lista completa de tickers de EEUU...")
-        # Fuente oficial de NASDAQ (incluye NYSE y AMEX)
         url = "http://www.nasdaqtrader.com/dynamic/SymDir/nasdaqtraded.txt"
         df = pd.read_csv(url, sep="|")
         
-        # Filtrar solo stocks y ETFs (descartar tests)
-        # 'Test Issue' column must be 'N'
         clean_df = df[df['Test Issue'] == 'N']
         tickers = clean_df['Symbol'].tolist()
         
-        # Limpieza básica
         final_tickers = []
         for t in tickers:
             if not isinstance(t, str): continue
-            # Filtrar warrants, derechos, etc si tienen longitudes raras o signos
-            # YFinance usa '-' en vez de '.' para BRK.B
             t = t.replace('.', '-')
-            # Descartar tickers con $ o caracteres raros que no sean -
             final_tickers.append(t)
             
         return final_tickers
     except Exception as e:
         print(f"Error obteniendo lista completa: {e}")
-        print("Usando lista respaldo S&P 500...")
         return get_sp500_tickers_fallback()
 
 def get_sp500_tickers_fallback():
-    # ... (código anterior si falla el masivo)
     try:
         url = 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
         headers = {"User-Agent": "Mozilla/5.0"}
@@ -56,33 +51,40 @@ def get_sp500_tickers_fallback():
         return ['AAPL', 'MSFT', 'GOOG']
 
 def analyze_ticker(ticker):
-    """Analiza un solo ticker: tendencia y dividendos."""
+    """Analiza un solo ticker: tendencia, dividendos, market cap y volatilidad."""
     try:
         stock = yf.Ticker(ticker)
-        hist = stock.history(period=PERIOD)
         
+        # 1. Filtro Rapido: Histórico
+        hist = stock.history(period=PERIOD)
         if hist.empty or len(hist) < 200:
             return None
         
-        # Análisis de Tendencia (Regresión Lineal sobre precio de cierre)
+        # 2. Filtro de Calidad (Market Cap y Beta)
+        info = stock.info
+        market_cap = info.get('marketCap', 0)
+        beta = info.get('beta', 0)
+        
+        if not market_cap or market_cap < MIN_MARKET_CAP:
+            return None
+        if beta and beta > MAX_BETA:
+            return None
+
+        # 3. Tendencia
         closes = hist['Close'].values
         x = np.arange(len(closes))
         slope, intercept, r_value, p_value, std_err = linregress(x, closes)
         
-        # Filtrar solo tendencia alcista fuerte
-        if slope <= 0 or (r_value**2) < MIN_R_SQUARED:
+        if slope <= MIN_SLOPE or (r_value**2) < MIN_R_SQUARED:
             return None
             
-        # Obtener datos de dividendos
-        info = stock.info
+        # 4. Dividendos
         dividend_yield = info.get('dividendYield', 0)
         ex_div_timestamp = info.get('exDividendDate', None)
         dividend_rate_annual = info.get('dividendRate', 0)
         
-        # Lógica mejorada para cuantía y fechas
+        # Logic for Payment Amount
         last_div_amount = 0
-        
-        # 1. Intentar obtener el último dividendo real pagado (Histórico)
         try:
             divs = stock.dividends
             if not divs.empty:
@@ -90,29 +92,21 @@ def analyze_ticker(ticker):
         except:
             pass
             
-        # Prioridad para 'Payment Amount': 
-        # Si tenemos un 'dividendRate' (anual), estimamos trimestral.
-        # Si no, usamos el último pagado real.
         est_payment_amt = last_div_amount
         if dividend_rate_annual and dividend_rate_annual > 0:
-            # Si el rate anual parece consistente con el último pago x4, usamos el ultimo pago (más exacto)
-            # Si no, usamos rate/4
             if abs((last_div_amount * 4) - dividend_rate_annual) < 0.1:
                  est_payment_amt = last_div_amount
             else:
                  est_payment_amt = round(dividend_rate_annual / 4, 2)
 
-        # Si no paga dividendos, descartar
         if (not dividend_yield and last_div_amount == 0):
              return None
 
-        # Formatear fechas
+        # Formatear
         ex_div_str = "N/A"
         if ex_div_timestamp:
-            dt_obj = datetime.datetime.fromtimestamp(ex_div_timestamp)
-            ex_div_str = dt_obj.strftime('%Y-%m-%d')
+            ex_div_str = datetime.datetime.fromtimestamp(ex_div_timestamp).strftime('%Y-%m-%d')
             
-        # Calcular crecimiento total
         start_price = closes[0]
         end_price = closes[-1]
         growth_pct = ((end_price - start_price) / start_price) * 100
@@ -126,17 +120,13 @@ def analyze_ticker(ticker):
             'growth_5y_pct': round(growth_pct, 2),
             'dividend_yield_pct': round((dividend_yield or 0) * 100, 2),
             'ex_div_date': ex_div_str,
-            'est_next_payment': round(est_payment_amt, 3), # Mostrar 3 decimales si es necesario
+            'est_next_payment': round(est_payment_amt, 3),
             'annual_dividend': dividend_rate_annual,
             'sector': info.get('sector', 'Unknown'),
-            # Puntuación 0-100
-            # 70% basado en consistencia de tendencia (R^2)
-            # 30% basado en Dividend Yield (Capped at 10% yield = 30 pts)
             'score': round((r_value**2 * 70) + (min(dividend_yield or 0, 0.10) * 300), 1)
         }
         
     except Exception as e:
-        # print(f"Error analizando {ticker}: {e}")
         return None
 
 def main():
