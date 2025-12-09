@@ -83,7 +83,8 @@ async function fetchData() {
             if (json.metadata && json.metadata.last_updated) {
                 const updatedTime = new Date(json.metadata.last_updated);
                 const timeStr = updatedTime.toLocaleString();
-                document.getElementById('dataLastUpdated').innerText = `Data Updated: ${timeStr}`;
+                if (document.getElementById('dataLastUpdated'))
+                    document.getElementById('dataLastUpdated').innerText = `Data Updated: ${timeStr}`;
             }
         } else {
             // Fallback for old Format (array)
@@ -91,7 +92,7 @@ async function fetchData() {
         }
 
         // Filter out bad data if any
-        stocksData = stocksData.filter(s => s.price > 0 && s.score > 0);
+        stocksData = stocksData.filter(s => s.price > 0 && s.score >= 0);
 
         filteredData = [...stocksData];
 
