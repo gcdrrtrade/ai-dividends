@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI DIVIDENDS | Smart Investing</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Scripts -->
+    <script src="https://s3.tradingview.com/tv.js"></script>
+</head>
+
+<body class="dark-mode">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="glass-header">
+            <div class="logo">
+                <i class="ri-radar-fill"></i>
+                <span>AI DIVIDENDS</span>
+            </div>
+
+            <!-- Centered Widget -->
+            <div class="header-center-widget">
+                <div class="market-date" id="marketDate">--</div>
+                <div class="market-time" id="marketTime">--:--</div>
+                <button id="themeToggle" class="icon-btn"><i class="ri-sun-line"></i></button>
+            </div>
+
+            <!-- Empty div for flex balance or extra nav -->
+            <div style="width: 140px;"></div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Data-Driven<br><span class="gradient-text">Dividend Growth</span></h1>
+                <p>Algorithmically selected US stocks with 5-year bullish trends and consistent yields.</p>
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <span class="label">Companies Analyzed</span>
+                        <span class="value" id="totalAnalyzed">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">AI Picks</span>
+                        <span class="valueHighlight" id="totalPicks">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Avg Yield</span>
+                        <span class="value" id="avgYield">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="label">Last Scan</span>
+                        <span class="valueHighlightSmall" id="dataLastUpdated"
+                            style="font-size: 0.9rem; color: var(--accent);">--</span>
+                    </div>
+                </div>
+                <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">
+                    Data Source: Yahoo Finance API. Validated against TradingView & Investing.com logic.
+                </p>
+            </div>
+        </section>
+
+        <!-- Top Picks Carousel -->
+        <section class="top-picks">
+            <h2><i class="ri-fire-fill"></i> Top AI Opportunities</h2>
+            <div class="carousel-container" id="topPicksContainer">
+                <!-- Injected via JS -->
+                <div class="loading-spinner">Loading AI Analysis...</div>
+            </div>
+        </section>
+
+        <!-- Main Data Table -->
+        <section class="market-scanner">
+            <div class="scanner-header">
+                <h2>Market Scanner</h2>
+                <div class="filters">
+                    <input type="text" id="searchInput" placeholder="Search Ticker or Company...">
+                    <select id="dateFilter">
+                        <option value="all">Time: All Dates</option>
+                        <option value="today">Time: Today</option>
+                        <option value="week">Time: This Week</option>
+                        <option value="month">Time: This Month</option>
+                    </select>
+                    <select id="sortSelect">
+                        <option value="score">Sort by: AI Score</option>
+                        <option value="yield">Sort by: Yield</option>
+                        <option value="growth">Sort by: 5y Growth</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table class="glass-table">
+                    <thead>
+                        <tr>
+                            <th>Ticker</th>
+                            <th>Company</th>
+                            <th>Price</th>
+                            <th>Trend (Slope)</th>
+                            <th>5Y Growth</th>
+                            <th>Yield</th>
+                            <th>Ex-Div Date</th>
+                            <th>AI Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockTableBody">
+                        <!-- Rows injected via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Stock Detail Modal -->
+    <div id="stockModal" class="modal hidden">
+        <div class="modal-content glass-panel">
+            <button class="close-modal"><i class="ri-close-line"></i></button>
+            <div class="modal-header">
+                <h2 id="modalTitle">AAPL - Apple Inc.</h2>
+                <span class="modal-badge" id="modalScore">AI Score: 98</span>
+            </div>
+            <div class="modal-grid">
+                <div class="chart-container" id="tvChartContainer">
+                    <!-- TradingView Widget -->
+                </div>
+                <div class="modal-details">
+                    <h3>Analysis Details</h3>
+                    <ul class="detail-list" id="modalDetailsList">
+                        <!-- Details -->
+                    </ul>
+                    <div class="dividend-countdown">
+                        <h4>Next Dividend</h4>
+                        <div class="countdown-timer" id="divTimer">-- Days</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
