@@ -240,9 +240,10 @@ function openStockModal(stock) {
         <li><span>Sector</span> <span>${stock.sector}</span></li>
         <li><span>Price</span> <span>$${stock.price}</span></li>
         <li><span>Dividend Yield</span> <span>${stock.dividend_yield_pct}%</span></li>
-        <li><span>5Y Growth</span> <span style="color:var(--success);">+${stock.growth_5y_pct}%</span></li>
+        <li><span>Annual Dividend</span> <span>$${stock.annual_dividend || '--'}</span></li>
+        <li><span>Est. Next Payment</span> <span style="color:var(--success); font-weight:700;">$${stock.est_next_payment || '--'} / share</span></li>
         <li><span>Ex-Div Date</span> <span>${stock.ex_div_date}</span></li>
-        <li><span>Slope (Trend)</span> <span>${stock.slope}</span></li>
+        <li><span>5Y Growth</span> <span style="color:var(--success);">+${stock.growth_5y_pct}%</span></li>
         <li><span>Trend Consistency (R²)</span> <span>${stock.r_squared}</span></li>
     `;
 

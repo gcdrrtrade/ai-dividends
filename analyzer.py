@@ -57,16 +57,41 @@ def analyze_ticker(ticker):
         # Obtener datos de dividendos
         info = stock.info
         dividend_yield = info.get('dividendYield', 0)
-        ex_div_date = info.get('exDividendDate', None)
+        ex_div_timestamp = info.get('exDividendDate', None)
+        dividend_rate_annual = info.get('dividendRate', 0)
         
-        # Si no paga dividendos, ¿lo queremos? El usuario dijo "reparto de dividendos".
-        if not dividend_yield:
+        # Lógica mejorada para cuantía y fechas
+        last_div_amount = 0
+        
+        # 1. Intentar obtener el último dividendo real pagado (Histórico)
+        try:
+            divs = stock.dividends
+            if not divs.empty:
+                last_div_amount = divs.iloc[-1]
+        except:
+            pass
+            
+        # Prioridad para 'Payment Amount': 
+        # Si tenemos un 'dividendRate' (anual), estimamos trimestral.
+        # Si no, usamos el último pagado real.
+        est_payment_amt = last_div_amount
+        if dividend_rate_annual and dividend_rate_annual > 0:
+            # Si el rate anual parece consistente con el último pago x4, usamos el ultimo pago (más exacto)
+            # Si no, usamos rate/4
+            if abs((last_div_amount * 4) - dividend_rate_annual) < 0.1:
+                 est_payment_amt = last_div_amount
+            else:
+                 est_payment_amt = round(dividend_rate_annual / 4, 2)
+
+        # Si no paga dividendos, descartar
+        if (not dividend_yield and last_div_amount == 0):
              return None
 
-        # Formatear fecha ex-div
+        # Formatear fechas
         ex_div_str = "N/A"
-        if ex_div_date:
-            ex_div_str = datetime.datetime.fromtimestamp(ex_div_date).strftime('%Y-%m-%d')
+        if ex_div_timestamp:
+            dt_obj = datetime.datetime.fromtimestamp(ex_div_timestamp)
+            ex_div_str = dt_obj.strftime('%Y-%m-%d')
             
         # Calcular crecimiento total
         start_price = closes[0]
@@ -80,10 +105,12 @@ def analyze_ticker(ticker):
             'slope': round(slope, 4),
             'r_squared': round(r_value**2, 4),
             'growth_5y_pct': round(growth_pct, 2),
-            'dividend_yield_pct': round(dividend_yield * 100, 2) if dividend_yield else 0,
+            'dividend_yield_pct': round((dividend_yield or 0) * 100, 2),
             'ex_div_date': ex_div_str,
+            'est_next_payment': round(est_payment_amt, 3), # Mostrar 3 decimales si es necesario
+            'annual_dividend': dividend_rate_annual,
             'sector': info.get('sector', 'Unknown'),
-            'score': round((r_value**2 * 100) + (dividend_yield * 1000 if dividend_yield else 0), 2) # Puntuación simple AI
+            'score': round((r_value**2 * 100) + ((dividend_yield or 0) * 1000), 2)
         }
         
     except Exception as e:
