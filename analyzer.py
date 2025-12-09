@@ -60,23 +60,42 @@ def analyze_ticker(ticker):
         stock = yf.Ticker(ticker)
         info = stock.info
         
-        # Filtros Básicos
+        # 2. Filtro de Calidad (Market Cap) - S&P 500 ya garantiza cierto tamaño, pero mantenemos limpieza básica
         market_cap = info.get('marketCap', 0)
-        if market_cap and market_cap < MIN_MARKET_CAP: return None
         
-        # Obtener Histórico para Tendencia
-        hist = stock.history(period=PERIOD)
-        if len(hist) < 200: return None
-        
-        closes = hist['Close'].values
-        x = np.arange(len(closes))
-        slope, intercept, r_value, p_value, std_err = linregress(x, closes)
-        
-        if slope <= MIN_SLOPE or (r_value**2) < MIN_R_SQUARED:
+        # Filtro básico de seguridad (evitar datos erróneos de empresas vacías)
+        if not market_cap or market_cap < MIN_MARKET_CAP:
             return None
-            
-        # Dividendos
+
+        # NO filtramos por Beta, Slope o R_Squared para cumplir con el requisito de "Todas las empresas que repartan dividendos"
+        # Estos factores ahora solo afectarán al AI SCORE, no a la inclusión en la lista.
+
+        # 3. Análisis de Tendencia (5 años) - Calculamos pero NO excluimos
+        hist = stock.history(period=PERIOD)
+        if len(hist) < 250:  # Al menos un año de datos
+            return None  # Si ni siquiera tiene historia, mejor ignorar
+        
+        closes = hist['Close'].tolist()
+        x = np.arange(len(closes))
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x, closes)
+        
+        # 4. Datos de Dividendos
         dividend_yield = info.get('dividendYield', 0)
+        
+        # REQUISITO CRÍTICO: "Que repartan dividendos"
+        # Si no tiene yield, intentamos calcularlo con histórico
+        if not dividend_yield:
+            divs = stock.dividends
+            if len(divs) > 0:
+                last_year_divs = divs.iloc[-4:].sum() # Aprox último año
+                current_price = closes[-1]
+                if current_price > 0:
+                    dividend_yield = last_year_divs / current_price
+        
+        # Si después de intentar calcularlo sigue siendo 0 o None, SE EXCLUYE.
+        if not dividend_yield or dividend_yield <= 0:
+            return None
+
         ex_div_timestamp = info.get('exDividendDate', None)
         dividend_rate_annual = info.get('dividendRate', 0)
         
@@ -92,8 +111,6 @@ def analyze_ticker(ticker):
                  est_payment_amt = last_div_amount
             else:
                  est_payment_amt = round(dividend_rate_annual / 4, 2)
-
-        if (not dividend_yield and last_div_amount == 0): return None
 
         ex_div_str = "N/A"
         if ex_div_timestamp:
