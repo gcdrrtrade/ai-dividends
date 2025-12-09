@@ -1,6 +1,97 @@
 // State
 let stocksData = [];
 let filteredData = [];
+let currentLanguage = localStorage.getItem('ai_dividends_lang') || 'es'; // Default ES
+
+// Translations
+const translations = {
+    en: {
+        heroTitle: 'Data-Driven<br><span class="gradient-text">Dividend Growth</span>',
+        heroSubtitle: 'Algorithmically selected US stocks with 5-year bullish trends and consistent yields.',
+        statCompanies: 'Companies Analyzed',
+        statPicks: 'AI Picks',
+        statYield: 'Avg Yield',
+        statLastScan: 'Last Scan',
+        heroDisclaimer: 'Data Source: TradingView Scanner API. Validated against TradingView logic.',
+        topPicksTitle: 'Top AI Opportunities',
+        loading: 'Loading AI Analysis...',
+        scannerTitle: 'Market Scanner',
+        searchPlaceholder: 'Search Ticker or Company...',
+        filterDateAll: 'Time: All Dates',
+        filterDateToday: 'Time: Today',
+        filterDateWeek: 'Time: This Week',
+        filterDateMonth: 'Time: This Month',
+        sortScore: 'Sort by: AI Score',
+        sortYield: 'Sort by: Yield',
+        sortGrowth: 'Sort by: 5y Growth',
+        sortDate: 'Sort by: Ex-Div Date',
+        colSymbol: 'Symbol',
+        colPrice: 'Price',
+        colGrowth: '5Y Growth',
+        colYield: 'Yield',
+        colExDate: 'Ex-Date',
+        colSignal: 'Signal',
+        colScore: 'AI Score',
+        tooltipScore: '<strong>AI Score (0-100)</strong><br>Based on uptrend consistency (70%) and dividend yield (30%).',
+        colDetails: 'Details',
+        viewBtn: 'View',
+        days: 'Days',
+        passed: 'Passed',
+        modalAnalysisDetails: 'Analysis Details',
+        modalNextDividend: 'Next Dividend',
+        modalSector: 'Sector',
+        modalPrice: 'Price',
+        modalYield: 'Dividend Yield',
+        modalAnnual: 'Annual Dividend',
+        modalEstPay: 'Est. Next Payment',
+        modalExDate: 'Ex-Div Date',
+        modalGrowth: '5Y Growth',
+        modalTrend: 'Trend Consistency (R²)'
+    },
+    es: {
+        heroTitle: 'Crecimiento de Dividendos<br><span class="gradient-text">Impulsado por Datos</span>',
+        heroSubtitle: 'Acciones de EE.UU. seleccionadas algorítmicamente con tendencias alcistas de 5 años y rendimientos consistentes.',
+        statCompanies: 'Empresas Analizadas',
+        statPicks: 'Selección AI',
+        statYield: 'Rentabilidad Media',
+        statLastScan: 'Último Escaneo',
+        heroDisclaimer: 'Fuente de datos: API de TradingView Scanner.',
+        topPicksTitle: 'Mejores Oportunidades AI',
+        loading: 'Cargando Análisis AI...',
+        scannerTitle: 'Escáner de Mercado',
+        searchPlaceholder: 'Buscar Ticker o Empresa...',
+        filterDateAll: 'Tiempo: Todas',
+        filterDateToday: 'Tiempo: Hoy',
+        filterDateWeek: 'Tiempo: Esta Semana',
+        filterDateMonth: 'Tiempo: Este Mes',
+        sortScore: 'Ordenar: Puntuación AI',
+        sortYield: 'Ordenar: Rentabilidad',
+        sortGrowth: 'Ordenar: Crecimiento 5A',
+        sortDate: 'Ordenar: Fecha Ex-Div',
+        colSymbol: 'Símbolo',
+        colPrice: 'Precio',
+        colGrowth: 'Crecimiento 5A',
+        colYield: 'Rentabilidad',
+        colExDate: 'Fecha Ex',
+        colSignal: 'Señal',
+        colScore: 'Puntuación AI',
+        tooltipScore: '<strong>Puntuación AI (0-100)</strong><br>Basada en la consistencia de la tendencia alcista (70%) y la rentabilidad del dividendo (30%).',
+        colDetails: 'Detalles',
+        viewBtn: 'Ver',
+        days: 'Días',
+        passed: 'Pasado',
+        modalAnalysisDetails: 'Detalles del Análisis',
+        modalNextDividend: 'Próximo Dividendo',
+        modalSector: 'Sector',
+        modalPrice: 'Precio',
+        modalYield: 'Rentabilidad',
+        modalAnnual: 'Dividendo Anual',
+        modalEstPay: 'Est. Próximo Pago',
+        modalExDate: 'Fecha Ex-Div',
+        modalGrowth: 'Crecimiento 5A',
+        modalTrend: 'Consistencia (R²)'
+    }
+};
 
 // DOM Elements
 const topPicksContainer = document.getElementById('topPicksContainer');
@@ -11,6 +102,8 @@ const dateFilter = document.getElementById('dateFilter');
 const marketTime = document.getElementById('marketTime');
 const modal = document.getElementById('stockModal');
 const closeModalBtn = document.querySelector('.close-modal');
+const langEnBtn = document.getElementById('langEn');
+const langEsBtn = document.getElementById('langEs');
 
 // Stats Elements
 const elTotalAnalyzed = document.getElementById('totalAnalyzed');
@@ -25,6 +118,7 @@ const divTimer = document.getElementById('divTimer');
 
 // Init
 document.addEventListener('DOMContentLoaded', () => {
+    updateLanguage(currentLanguage); // Apply lang first
     fetchData();
     setupEventListeners();
     startClock();
@@ -39,6 +133,10 @@ function setupEventListeners() {
         document.getElementById('tvChartContainer').innerHTML = ''; // Clear chart to stop memory leaks
     });
 
+    // Language Switcher
+    langEnBtn.addEventListener('click', () => updateLanguage('en'));
+    langEsBtn.addEventListener('click', () => updateLanguage('es'));
+
     // Close modal on click outside
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
@@ -46,6 +144,34 @@ function setupEventListeners() {
             document.getElementById('tvChartContainer').innerHTML = '';
         }
     });
+}
+
+function updateLanguage(lang) {
+    currentLanguage = lang;
+    localStorage.setItem('ai_dividends_lang', lang);
+    const t = translations[lang];
+
+    // Update Static Elements
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.innerHTML = t[key];
+    });
+
+    // Update Placeholders
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key]) el.placeholder = t[key];
+    });
+
+    // Update active state of buttons (optional styling)
+    langEnBtn.style.opacity = lang === 'en' ? '1' : '0.5';
+    langEsBtn.style.opacity = lang === 'es' ? '1' : '0.5';
+
+    // Rerender Table/Modal if data loaded
+    if (stocksData.length > 0) {
+        renderTopPicks();
+        renderTable();
+    }
 }
 
 function startClock() {

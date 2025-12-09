@@ -31,7 +31,11 @@
             <div class="header-center-widget">
                 <div class="market-date" id="marketDate">--</div>
                 <div class="market-time" id="marketTime">--:--</div>
-                <button id="themeToggle" class="icon-btn"><i class="ri-sun-line"></i></button>
+                <div class="header-controls">
+                    <button id="langEn" class="icon-btn" title="English">🇺🇸</button>
+                    <button id="langEs" class="icon-btn" title="Español">🇪🇸</button>
+                    <button id="themeToggle" class="icon-btn"><i class="ri-sun-line"></i></button>
+                </div>
             </div>
 
             <!-- Empty div for flex balance or extra nav -->
@@ -41,59 +45,61 @@
         <!-- Hero Section -->
         <section class="hero">
             <div class="hero-content">
-                <h1>Data-Driven<br><span class="gradient-text">Dividend Growth</span></h1>
-                <p>Algorithmically selected US stocks with 5-year bullish trends and consistent yields.</p>
+                <h1 data-i18n="heroTitle">Data-Driven<br><span class="gradient-text">Dividend Growth</span></h1>
+                <p data-i18n="heroSubtitle">Algorithmically selected US stocks with 5-year bullish trends and consistent
+                    yields.</p>
                 <div class="stats-bar">
                     <div class="stat-item">
-                        <span class="label">Companies Analyzed</span>
+                        <span class="label" data-i18n="statCompanies">Companies Analyzed</span>
                         <span class="value" id="totalAnalyzed">-</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">AI Picks</span>
+                        <span class="label" data-i18n="statPicks">AI Picks</span>
                         <span class="valueHighlight" id="totalPicks">-</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Avg Yield</span>
+                        <span class="label" data-i18n="statYield">Avg Yield</span>
                         <span class="value" id="avgYield">-</span>
                     </div>
                     <div class="stat-item">
-                        <span class="label">Last Scan</span>
+                        <span class="label" data-i18n="statLastScan">Last Scan</span>
                         <span class="valueHighlightSmall" id="dataLastUpdated"
                             style="font-size: 0.9rem; color: var(--accent);">--</span>
                     </div>
                 </div>
-                <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">
-                    Data Source: Yahoo Finance API. Validated against TradingView & Investing.com logic.
+                <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;" data-i18n="heroDisclaimer">
+                    Data Source: TradingView Scanner API. Validated against TradingView logic.
                 </p>
             </div>
         </section>
 
         <!-- Top Picks Carousel -->
         <section class="top-picks">
-            <h2><i class="ri-fire-fill"></i> Top AI Opportunities</h2>
+            <h2><i class="ri-fire-fill"></i> <span data-i18n="topPicksTitle">Top AI Opportunities</span></h2>
             <div class="carousel-container" id="topPicksContainer">
                 <!-- Injected via JS -->
-                <div class="loading-spinner">Loading AI Analysis...</div>
+                <div class="loading-spinner" data-i18n="loading">Loading AI Analysis...</div>
             </div>
         </section>
 
         <!-- Main Data Table -->
         <section class="market-scanner">
             <div class="scanner-header">
-                <h2>Market Scanner</h2>
+                <h2 data-i18n="scannerTitle">Market Scanner</h2>
                 <div class="filters">
-                    <input type="text" id="searchInput" placeholder="Search Ticker or Company...">
+                    <input type="text" id="searchInput" placeholder="Search Ticker or Company..."
+                        data-i18n-placeholder="searchPlaceholder">
                     <select id="dateFilter">
-                        <option value="all">Time: All Dates</option>
-                        <option value="today">Time: Today</option>
-                        <option value="week">Time: This Week</option>
-                        <option value="month">Time: This Month</option>
+                        <option value="all" data-i18n="filterDateAll">Time: All Dates</option>
+                        <option value="today" data-i18n="filterDateToday">Time: Today</option>
+                        <option value="week" data-i18n="filterDateWeek">Time: This Week</option>
+                        <option value="month" data-i18n="filterDateMonth">Time: This Month</option>
                     </select>
                     <select id="sortSelect">
-                        <option value="score">Sort by: AI Score</option>
-                        <option value="yield">Sort by: Yield</option>
-                        <option value="growth">Sort by: 5y Growth</option>
-                        <option value="date">Sort by: Ex-Div Date</option>
+                        <option value="score" data-i18n="sortScore">Sort by: AI Score</option>
+                        <option value="yield" data-i18n="sortYield">Sort by: Yield</option>
+                        <option value="growth" data-i18n="sortGrowth">Sort by: 5y Growth</option>
+                        <option value="date" data-i18n="sortDate">Sort by: Ex-Div Date</option>
                     </select>
                 </div>
             </div>
@@ -102,23 +108,22 @@
                 <table class="glass-table">
                     <thead>
                         <tr>
-                            <th data-sort="symbol">Symbol</th>
-                            <th data-sort="price">Price</th>
-                            <th data-sort="growth_5y_pct">5Y Growth</th>
-                            <th data-sort="dividend_yield_pct">Yield</th>
-                            <th data-sort="ex_div_date" style="min-width:100px;">Ex-Date</th>
-                            <th data-sort="tv_signal" style="min-width:100px;">Signal</th>
+                            <th data-sort="symbol" data-i18n="colSymbol">Symbol</th>
+                            <th data-sort="price" data-i18n="colPrice">Price</th>
+                            <th data-sort="growth_5y_pct" data-i18n="colGrowth">5Y Growth</th>
+                            <th data-sort="dividend_yield_pct" data-i18n="colYield">Yield</th>
+                            <th data-sort="ex_div_date" style="min-width:100px;" data-i18n="colExDate">Ex-Date</th>
+                            <th data-sort="tv_signal" style="min-width:100px;" data-i18n="colSignal">Signal</th>
                             <th data-sort="score">
                                 <span class="tooltip-container">
-                                    AI Score
-                                    <span class="tooltip-text">
-                                        <strong>Puntuación AI (0-100)</strong><br>
-                                        Basada en la consistencia de la tendencia alcista (70%) y la rentabilidad del
-                                        dividendo (30%).
+                                    <span data-i18n="colScore">AI Score</span>
+                                    <span class="tooltip-text" data-i18n="tooltipScore">
+                                        <strong>AI Score (0-100)</strong><br>
+                                        Based on uptrend consistency (70%) and dividend yield (30%).
                                     </span>
                                 </span>
                             </th>
-                            <th>Details</th>
+                            <th data-i18n="colDetails">Details</th>
                         </tr>
                     </thead>
                     <tbody id="stockTableBody">
@@ -142,12 +147,12 @@
                     <!-- TradingView Widget -->
                 </div>
                 <div class="modal-details">
-                    <h3>Analysis Details</h3>
+                    <h3 data-i18n="modalAnalysisDetails">Analysis Details</h3>
                     <ul class="detail-list" id="modalDetailsList">
                         <!-- Details -->
                     </ul>
                     <div class="dividend-countdown">
-                        <h4>Next Dividend</h4>
+                        <h4 data-i18n="modalNextDividend">Next Dividend</h4>
                         <div class="countdown-timer" id="divTimer">-- Days</div>
                     </div>
                 </div>
