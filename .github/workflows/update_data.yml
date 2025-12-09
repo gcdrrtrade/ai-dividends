@@ -2,8 +2,8 @@ name: Update Stock Data
 
 on:
   schedule:
-    - cron: '0 10 * * 1-5' # 10:00 UTC (Market Open) Mon-Fri
-  workflow_dispatch: # Button to run manually
+    - cron: '0 0 * * *' # De Lunes a Domingo a las 00:00 UTC
+  workflow_dispatch: # Botón manual
 
 jobs:
   build:
