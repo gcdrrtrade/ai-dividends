@@ -194,11 +194,15 @@ body {
     position: absolute;
     z-index: 9999;
     /* Ensure top layer */
-    bottom: 125%;
+    /* Position below to avoid overflow clipping */
+    bottom: auto;
+    top: 100%;
+    margin-top: 12px;
     left: 50%;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%);
+
     opacity: 0;
-    transition: opacity 0.3s, transform 0.3s;
+    transition: opacity 0.3s;
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(10px);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
@@ -206,17 +210,20 @@ body {
     font-weight: 500;
     line-height: 1.5;
     pointer-events: none;
+    white-space: normal;
 }
 
 .tooltip-text::after {
     content: "";
     position: absolute;
-    top: 100%;
+    bottom: 100%;
+    /* Arrow on top */
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: var(--glass-border) transparent transparent transparent;
+    border-color: transparent transparent #000000 transparent;
+    /* Pointing up, colored black */
 }
 
 /* Top Picks */
