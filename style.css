@@ -60,22 +60,29 @@ body {
 
 .header-controls {
     display: flex;
-    gap: 0.75rem;
+    gap: 1rem;
     align-items: center;
-    margin-top: 0.25rem;
 }
 
 .header-controls .icon-btn {
-    font-size: 1.4rem;
-    /* Larger flags */
-    opacity: 0.5;
+    font-size: 2rem;
+    /* Much Larger flags requested */
+    opacity: 0.6;
     transition: all 0.2s;
+    line-height: 1;
 }
 
 .header-controls .icon-btn:hover,
 .header-controls .icon-btn.active {
     opacity: 1;
-    transform: scale(1.1);
+    transform: scale(1.15);
+}
+
+.header-right {
+    display: flex;
+    justify-content: flex-end;
+    min-width: 140px;
+    /* Balance logo width */
 }
 
 .market-date {
@@ -561,13 +568,19 @@ select:focus {
         display: none;
     }
 
-    #themeToggle {
-        position: static;
-        /* Let it sit in the controls */
+    .header-right {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        min-width: unset;
     }
 
     .header-controls {
-        margin-top: 0.5rem;
+        margin-top: 0;
+    }
+
+    #themeToggle {
+        position: static;
     }
 
     .hero h1 {
