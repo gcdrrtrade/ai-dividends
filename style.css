@@ -506,9 +506,112 @@ select:focus {
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.countdown-timer {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-top: 0.5rem;
-    color: var(--text-main);
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .app-container {
+        padding: 1rem;
+    }
+
+    .glass-header {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+        position: relative;
+        /* Unlock sticky if needed or keep sticky but smaller */
+    }
+
+    .header-center-widget {
+        position: static;
+        /* Remove absolute positioning */
+        transform: none;
+        order: 2;
+        /* Move below logo */
+        margin-bottom: 0.5rem;
+    }
+
+    .logo {
+        order: 1;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Hide empty spacer div on mobile if it exists */
+    .glass-header>div:last-child {
+        display: none;
+    }
+
+    #themeToggle {
+        position: absolute;
+        top: 1.2rem;
+        right: 1.5rem;
+        margin-top: 0;
+    }
+
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .stats-bar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+        padding: 1.5rem;
+        width: 100%;
+    }
+
+    .market-scanner h2 {
+        font-size: 1.2rem;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .scanner-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .table-wrapper {
+        margin: 0 -1rem;
+        /* Negative margin to pull to edges */
+        width: calc(100% + 2rem);
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .glass-table th,
+    .glass-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+    }
+
+    /* Hide less critical columns on very small screens? Optional. */
+
+    .modal-content {
+        height: 100%;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+
+    .modal-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 1fr;
+        overflow-y: auto;
+    }
+
+    .chart-container {
+        border-right: none;
+        border-bottom: 1px solid var(--glass-border);
+        min-height: 300px;
+    }
 }
