@@ -65,11 +65,36 @@ body {
 }
 
 .header-controls .icon-btn {
-    font-size: 2rem;
-    /* Much Larger flags requested */
-    opacity: 0.6;
+    font-size: 1.5rem;
+    opacity: 0.8;
     transition: all 0.2s;
     line-height: 1;
+    color: var(--text-main);
+}
+
+.lang-text-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0.25rem;
+    transition: all 0.2s;
+    font-family: var(--font-main);
+}
+
+.lang-text-btn.active,
+.lang-text-btn:hover {
+    color: var(--text-main);
+    text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+    transform: scale(1.1);
+}
+
+.lang-separator {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.9rem;
+    margin: 0 0.1rem;
 }
 
 .header-controls .icon-btn:hover,
@@ -541,46 +566,49 @@ select:focus {
     }
 
     .glass-header {
-        flex-direction: row;
-        /* Keep row */
-        flex-wrap: wrap;
-        /* Allow wrapping */
-        justify-content: space-between;
-        gap: 0.5rem;
-        padding: 0.75rem 1rem;
+        position: relative;
+        flex-direction: column;
+        align-items: flex-start;
+        padding-bottom: 4rem;
+        /* Make space for bottom widget */
+        gap: 0;
     }
 
     .logo {
         width: 100%;
-        order: 1;
-        justify-content: center;
-        margin-bottom: 0.5rem;
-    }
-
-    .header-center-widget {
-        position: static;
-        transform: none;
-        order: 2;
-        /* Move Date to Middle */
-        width: 100%;
-        margin-top: 0;
-        padding-top: 0;
-        border-top: none;
-        flex-direction: row;
-        justify-content: center;
-        gap: 1rem;
+        text-align: left;
+        /* Logo top-left */
+        margin-bottom: 0;
+        padding-right: 120px;
+        /* Prevent overlap with absolute flags */
     }
 
     .header-right {
-        order: 3;
-        /* Move Flags to Bottom */
+        position: absolute;
+        top: 0.75rem;
+        right: 1rem;
+        width: auto;
+        margin: 0;
+        padding: 0;
+        display: flex !important;
+        background: none;
+        border: none;
+        z-index: 1001;
+        /* Force on top */
+    }
+
+    .header-center-widget {
+        position: absolute;
+        bottom: 0.75rem;
+        left: 0;
+        right: 0;
         width: 100%;
-        justify-content: center;
-        /* Center flags */
-        margin-top: 0.75rem;
-        padding-top: 0.75rem;
+        margin: 0;
+        padding-top: 0.5rem;
         border-top: 1px solid rgba(255, 255, 255, 0.05);
-        /* Separator for flags */
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
     }
 
     .market-date,
@@ -591,12 +619,17 @@ select:focus {
 
     .header-controls {
         margin-top: 0;
+        display: flex !important;
+        opacity: 1 !important;
+        z-index: 1000;
     }
 
-    /* Hide empty spacer div on mobile if it exists */
-    .glass-header>div:last-child {
-        display: none;
+    .header-controls .icon-btn {
+        opacity: 1 !important;
+        pointer-events: auto !important;
     }
+
+    /* Fixed: Removed erroneous hidden last-child rule that was hiding flags */
 
     .hero h1 {
         font-size: 2.2rem;

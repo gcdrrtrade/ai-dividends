@@ -164,8 +164,14 @@ function updateLanguage(lang) {
     });
 
     // Update active state of buttons (optional styling)
-    langEnBtn.style.opacity = lang === 'en' ? '1' : '0.5';
-    langEsBtn.style.opacity = lang === 'es' ? '1' : '0.5';
+    // Update active state of buttons
+    if (lang === 'en') {
+        langEnBtn.classList.add('active');
+        langEsBtn.classList.remove('active');
+    } else {
+        langEsBtn.classList.add('active');
+        langEnBtn.classList.remove('active');
+    }
 
     // Rerender Table/Modal if data loaded
     if (stocksData.length > 0) {
