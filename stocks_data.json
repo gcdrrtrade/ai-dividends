@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-01-04 02:30:26",
+    "last_updated": "2026-01-05 02:29:53",
     "total_analyzed": 500
   },
   "data": [
@@ -1612,7 +1612,7 @@
       "dividend_yield_pct": 0.18,
       "start_price": 0,
       "end_price": 679.55,
-      "ex_div_date": "2025-10-20",
+      "ex_div_date": "2026-01-05",
       "est_next_payment": 0.313,
       "annual_dividend": 1.25,
       "sector": "Producer Manufacturing",
@@ -3737,7 +3737,7 @@
       "dividend_yield_pct": 0.78,
       "start_price": 0,
       "end_price": 138.42,
-      "ex_div_date": "2025-10-03",
+      "ex_div_date": "2026-01-05",
       "est_next_payment": 0.27,
       "annual_dividend": 1.08,
       "sector": "Finance",
