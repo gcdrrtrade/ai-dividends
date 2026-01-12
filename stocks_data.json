@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-01-11 02:30:11",
+    "last_updated": "2026-01-12 02:25:43",
     "total_analyzed": 500
   },
   "data": [
@@ -4519,7 +4519,7 @@
       "dividend_yield_pct": 4.67,
       "start_price": 0,
       "end_price": 36.82,
-      "ex_div_date": "2025-10-09",
+      "ex_div_date": "2026-01-12",
       "est_next_payment": 0.43,
       "annual_dividend": 1.72,
       "sector": "Finance",
@@ -5165,7 +5165,7 @@
       "dividend_yield_pct": 6.1,
       "start_price": 0,
       "end_price": 23.99,
-      "ex_div_date": "2025-10-10",
+      "ex_div_date": "2026-01-12",
       "est_next_payment": 0.366,
       "annual_dividend": 1.46,
       "sector": "Communications",
@@ -5845,7 +5845,7 @@
       "dividend_yield_pct": 5.04,
       "start_price": 0,
       "end_price": 23.23,
-      "ex_div_date": "2025-10-14",
+      "ex_div_date": "2026-01-12",
       "est_next_payment": 0.292,
       "annual_dividend": 1.17,
       "sector": "Consumer Non-Durables",
@@ -6848,7 +6848,7 @@
       "dividend_yield_pct": 6.82,
       "start_price": 0,
       "end_price": 40.46,
-      "ex_div_date": "2025-10-10",
+      "ex_div_date": "2026-01-12",
       "est_next_payment": 0.69,
       "annual_dividend": 2.76,
       "sector": "Communications",
