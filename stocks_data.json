@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-01-25 02:32:30",
+    "last_updated": "2026-01-26 02:31:44",
     "total_analyzed": 500
   },
   "data": [
@@ -719,6 +719,23 @@
       "score": 88
     },
     {
+      "symbol": "KKR",
+      "name": "KKR & Co. Inc.",
+      "price": 121.25,
+      "slope": 1.9711,
+      "r_squared": 0.35,
+      "growth_5y_pct": 197.11,
+      "dividend_yield_pct": 6.17,
+      "start_price": 0,
+      "end_price": 121.25,
+      "ex_div_date": "2025-11-17",
+      "est_next_payment": 1.869,
+      "annual_dividend": 7.48,
+      "sector": "Finance",
+      "tv_signal": "SELL",
+      "score": 88
+    },
+    {
       "symbol": "PFG",
       "name": "Principal Financial Group Inc",
       "price": 91.21,
@@ -1396,6 +1413,23 @@
       "annual_dividend": 0.6,
       "sector": "Non-Energy Minerals",
       "tv_signal": "BUY",
+      "score": 83
+    },
+    {
+      "symbol": "JPM",
+      "name": "JP Morgan Chase & Co.",
+      "price": 297.72,
+      "slope": 1.2437,
+      "r_squared": 0.53,
+      "growth_5y_pct": 124.37,
+      "dividend_yield_pct": 2.02,
+      "start_price": 0,
+      "end_price": 297.72,
+      "ex_div_date": "2026-01-06",
+      "est_next_payment": 1.5,
+      "annual_dividend": 6.0,
+      "sector": "Finance",
+      "tv_signal": "SELL",
       "score": 83
     },
     {
@@ -2963,23 +2997,6 @@
       "score": 72
     },
     {
-      "symbol": "AVGO",
-      "name": "Broadcom Inc.",
-      "price": 320.05,
-      "slope": 5.9017,
-      "r_squared": 0.32,
-      "growth_5y_pct": 590.17,
-      "dividend_yield_pct": 0.81,
-      "start_price": 0,
-      "end_price": 320.05,
-      "ex_div_date": "2025-12-22",
-      "est_next_payment": 0.65,
-      "annual_dividend": 2.6,
-      "sector": "Electronic Technology",
-      "tv_signal": "SELL",
-      "score": 72
-    },
-    {
       "symbol": "CSCO",
       "name": "Cisco Systems, Inc.",
       "price": 74.59,
@@ -3048,23 +3065,6 @@
       "score": 72
     },
     {
-      "symbol": "KKR",
-      "name": "KKR & Co. Inc.",
-      "price": 121.25,
-      "slope": 1.9711,
-      "r_squared": 0.35,
-      "growth_5y_pct": 197.11,
-      "dividend_yield_pct": 0.61,
-      "start_price": 0,
-      "end_price": 121.25,
-      "ex_div_date": "2025-11-17",
-      "est_next_payment": 0.185,
-      "annual_dividend": 0.74,
-      "sector": "Finance",
-      "tv_signal": "SELL",
-      "score": 72
-    },
-    {
       "symbol": "OMC",
       "name": "Omnicom Group Inc.",
       "price": 79.79,
@@ -3122,12 +3122,12 @@
       "slope": 0.2683,
       "r_squared": 0.45,
       "growth_5y_pct": 26.83,
-      "dividend_yield_pct": 4.25,
+      "dividend_yield_pct": 6.05,
       "start_price": 0,
       "end_price": 282.63,
       "ex_div_date": "2025-12-15",
-      "est_next_payment": 3.0,
-      "annual_dividend": 12.0,
+      "est_next_payment": 4.275,
+      "annual_dividend": 17.1,
       "sector": "Finance",
       "tv_signal": "BUY",
       "score": 72
@@ -3609,6 +3609,23 @@
       "score": 68
     },
     {
+      "symbol": "AAPL",
+      "name": "Apple Inc.",
+      "price": 248.04,
+      "slope": 0.8201,
+      "r_squared": 0.59,
+      "growth_5y_pct": 82.01,
+      "dividend_yield_pct": 0.42,
+      "start_price": 0,
+      "end_price": 248.04,
+      "ex_div_date": "2025-11-10",
+      "est_next_payment": 0.26,
+      "annual_dividend": 1.04,
+      "sector": "Electronic Technology",
+      "tv_signal": "SELL",
+      "score": 68
+    },
+    {
       "symbol": "AIZ",
       "name": "Assurant, Inc.",
       "price": 233.39,
@@ -3904,12 +3921,12 @@
       "slope": 6.6067,
       "r_squared": 0.23,
       "growth_5y_pct": 660.67,
-      "dividend_yield_pct": 0.57,
+      "dividend_yield_pct": 0.39,
       "start_price": 0,
       "end_price": 160.12,
       "ex_div_date": "2025-12-22",
-      "est_next_payment": 0.227,
-      "annual_dividend": 0.91,
+      "est_next_payment": 0.156,
+      "annual_dividend": 0.63,
       "sector": "Utilities",
       "tv_signal": "SELL",
       "score": 65
