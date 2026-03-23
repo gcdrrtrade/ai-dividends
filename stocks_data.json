@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-03-22 02:53:51",
+    "last_updated": "2026-03-23 02:53:35",
     "total_analyzed": 500
   },
   "data": [
@@ -68,23 +68,6 @@
       "ex_div_date": "2026-01-22",
       "est_next_payment": 0.25,
       "annual_dividend": 1.0,
-      "sector": "Energy Minerals",
-      "tv_signal": "STRONG_BUY",
-      "score": 94
-    },
-    {
-      "symbol": "OXY",
-      "name": "Occidental Petroleum Corporation",
-      "price": 60.71,
-      "slope": 1.2485,
-      "r_squared": 0.28,
-      "growth_5y_pct": 124.85,
-      "dividend_yield_pct": 1.71,
-      "start_price": 0,
-      "end_price": 60.71,
-      "ex_div_date": "2026-03-10",
-      "est_next_payment": 0.26,
-      "annual_dividend": 1.04,
       "sector": "Energy Minerals",
       "tv_signal": "STRONG_BUY",
       "score": 94
@@ -413,6 +396,23 @@
       "score": 84
     },
     {
+      "symbol": "MS",
+      "name": "Morgan Stanley",
+      "price": 161.47,
+      "slope": 0.9546,
+      "r_squared": 0.29,
+      "growth_5y_pct": 95.46,
+      "dividend_yield_pct": 5.99,
+      "start_price": 0,
+      "end_price": 161.47,
+      "ex_div_date": "2026-01-30",
+      "est_next_payment": 2.419,
+      "annual_dividend": 9.68,
+      "sector": "Finance",
+      "tv_signal": "NEUTRAL",
+      "score": 84
+    },
+    {
       "symbol": "MPC",
       "name": "Marathon Petroleum Corporation",
       "price": 232.53,
@@ -648,23 +648,6 @@
       "annual_dividend": 18.0,
       "sector": "Finance",
       "tv_signal": "SELL",
-      "score": 77
-    },
-    {
-      "symbol": "MS",
-      "name": "Morgan Stanley",
-      "price": 161.47,
-      "slope": 0.9546,
-      "r_squared": 0.29,
-      "growth_5y_pct": 95.46,
-      "dividend_yield_pct": 2.48,
-      "start_price": 0,
-      "end_price": 161.47,
-      "ex_div_date": "2026-01-30",
-      "est_next_payment": 1.0,
-      "annual_dividend": 4.0,
-      "sector": "Finance",
-      "tv_signal": "NEUTRAL",
       "score": 77
     },
     {
@@ -1884,7 +1867,7 @@
       "dividend_yield_pct": 0.84,
       "start_price": 0,
       "end_price": 310.51,
-      "ex_div_date": "2025-12-22",
+      "ex_div_date": "2026-03-23",
       "est_next_payment": 0.65,
       "annual_dividend": 2.6,
       "sector": "Electronic Technology",
@@ -2028,23 +2011,6 @@
       "score": 67
     },
     {
-      "symbol": "MU",
-      "name": "Micron Technology, Inc.",
-      "price": 422.9,
-      "slope": 3.6804,
-      "r_squared": 0.17,
-      "growth_5y_pct": 368.04,
-      "dividend_yield_pct": 0.12,
-      "start_price": 0,
-      "end_price": 422.9,
-      "ex_div_date": "2025-12-29",
-      "est_next_payment": 0.124,
-      "annual_dividend": 0.5,
-      "sector": "Electronic Technology",
-      "tv_signal": "BUY",
-      "score": 67
-    },
-    {
       "symbol": "NRG",
       "name": "NRG Energy, Inc.",
       "price": 145.8,
@@ -2058,6 +2024,23 @@
       "est_next_payment": 0.475,
       "annual_dividend": 1.9,
       "sector": "Utilities",
+      "tv_signal": "STRONG_SELL",
+      "score": 67
+    },
+    {
+      "symbol": "NVDA",
+      "name": "NVIDIA Corporation",
+      "price": 172.7,
+      "slope": 12.5451,
+      "r_squared": 0.32,
+      "growth_5y_pct": 1254.51,
+      "dividend_yield_pct": 0.02,
+      "start_price": 0,
+      "end_price": 172.7,
+      "ex_div_date": "2026-03-11",
+      "est_next_payment": 0.01,
+      "annual_dividend": 0.04,
+      "sector": "Electronic Technology",
       "tv_signal": "STRONG_SELL",
       "score": 67
     },
@@ -2224,7 +2207,7 @@
       "dividend_yield_pct": 0.79,
       "start_price": 0,
       "end_price": 126.74,
-      "ex_div_date": "2025-12-16",
+      "ex_div_date": "2026-03-23",
       "est_next_payment": 0.25,
       "annual_dividend": 1.0,
       "sector": "Electronic Technology",
@@ -2351,23 +2334,6 @@
       "score": 63
     },
     {
-      "symbol": "COF",
-      "name": "Capital One Financial Corp",
-      "price": 181.41,
-      "slope": 0.4242,
-      "r_squared": 0.28,
-      "growth_5y_pct": 42.42,
-      "dividend_yield_pct": 6.7,
-      "start_price": 0,
-      "end_price": 181.41,
-      "ex_div_date": "2026-02-19",
-      "est_next_payment": 3.036,
-      "annual_dividend": 12.15,
-      "sector": "Finance",
-      "tv_signal": "SELL",
-      "score": 63
-    },
-    {
       "symbol": "CEG",
       "name": "Constellation Energy Corporation",
       "price": 281.99,
@@ -2382,6 +2348,23 @@
       "annual_dividend": 1.71,
       "sector": "Utilities",
       "tv_signal": "STRONG_SELL",
+      "score": 63
+    },
+    {
+      "symbol": "DTE",
+      "name": "DTE Energy Company",
+      "price": 141.57,
+      "slope": 0.2781,
+      "r_squared": 0.5,
+      "growth_5y_pct": 27.81,
+      "dividend_yield_pct": 6.47,
+      "start_price": 0,
+      "end_price": 141.57,
+      "ex_div_date": "2026-03-16",
+      "est_next_payment": 2.291,
+      "annual_dividend": 9.16,
+      "sector": "Utilities",
+      "tv_signal": "SELL",
       "score": 63
     },
     {
@@ -2861,23 +2844,6 @@
       "score": 60
     },
     {
-      "symbol": "DTE",
-      "name": "DTE Energy Company",
-      "price": 141.57,
-      "slope": 0.2781,
-      "r_squared": 0.5,
-      "growth_5y_pct": 27.81,
-      "dividend_yield_pct": 3.29,
-      "start_price": 0,
-      "end_price": 141.57,
-      "ex_div_date": "2026-03-16",
-      "est_next_payment": 1.165,
-      "annual_dividend": 4.66,
-      "sector": "Utilities",
-      "tv_signal": "SELL",
-      "score": 60
-    },
-    {
       "symbol": "MRSH",
       "name": "Marsh & McLennan Companies, Inc.",
       "price": 176.48,
@@ -2952,12 +2918,12 @@
       "slope": 0.1709,
       "r_squared": 0.49,
       "growth_5y_pct": 17.09,
-      "dividend_yield_pct": 4.66,
+      "dividend_yield_pct": 6.57,
       "start_price": 0,
       "end_price": 22.34,
       "ex_div_date": "2026-03-06",
-      "est_next_payment": 0.26,
-      "annual_dividend": 1.04,
+      "est_next_payment": 0.367,
+      "annual_dividend": 1.47,
       "sector": "Finance",
       "tv_signal": "SELL",
       "score": 59
@@ -3725,6 +3691,23 @@
       "annual_dividend": 4.24,
       "sector": "Finance",
       "tv_signal": "STRONG_SELL",
+      "score": 52
+    },
+    {
+      "symbol": "COF",
+      "name": "Capital One Financial Corp",
+      "price": 181.41,
+      "slope": 0.4242,
+      "r_squared": 0.28,
+      "growth_5y_pct": 42.42,
+      "dividend_yield_pct": 1.76,
+      "start_price": 0,
+      "end_price": 181.41,
+      "ex_div_date": "2026-02-19",
+      "est_next_payment": 0.8,
+      "annual_dividend": 3.2,
+      "sector": "Finance",
+      "tv_signal": "SELL",
       "score": 52
     },
     {
