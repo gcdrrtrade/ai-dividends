@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-04-12 03:32:46",
+    "last_updated": "2026-04-13 03:39:00",
     "total_analyzed": 500
   },
   "data": [
@@ -4774,7 +4774,7 @@
       "dividend_yield_pct": 5.61,
       "start_price": 0,
       "end_price": 20.87,
-      "ex_div_date": "2026-01-12",
+      "ex_div_date": "2026-04-13",
       "est_next_payment": 0.293,
       "annual_dividend": 1.17,
       "sector": "Consumer Non-Durables",
