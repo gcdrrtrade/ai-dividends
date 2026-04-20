@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-04-19 03:37:27",
+    "last_updated": "2026-04-20 03:39:20",
     "total_analyzed": 500
   },
   "data": [
@@ -541,7 +541,7 @@
       "dividend_yield_pct": 0.76,
       "start_price": 0,
       "end_price": 794.65,
-      "ex_div_date": "2026-01-20",
+      "ex_div_date": "2026-04-20",
       "est_next_payment": 1.51,
       "annual_dividend": 6.04,
       "sector": "Producer Manufacturing",
@@ -5828,7 +5828,7 @@
       "dividend_yield_pct": 1.73,
       "start_price": 0,
       "end_price": 122.38,
-      "ex_div_date": "2026-01-20",
+      "ex_div_date": "2026-04-20",
       "est_next_payment": 0.53,
       "annual_dividend": 2.12,
       "sector": "Health Technology",
@@ -5981,7 +5981,7 @@
       "dividend_yield_pct": 2.47,
       "start_price": 0,
       "end_price": 85.81,
-      "ex_div_date": "2026-01-21",
+      "ex_div_date": "2026-04-20",
       "est_next_payment": 0.53,
       "annual_dividend": 2.12,
       "sector": "Consumer Non-Durables",
@@ -6304,7 +6304,7 @@
       "dividend_yield_pct": 3.53,
       "start_price": 0,
       "end_price": 54.33,
-      "ex_div_date": "2025-12-29",
+      "ex_div_date": "2026-04-20",
       "est_next_payment": 0.48,
       "annual_dividend": 1.92,
       "sector": "Consumer Non-Durables",
