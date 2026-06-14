@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-06-13 04:27:00",
+    "last_updated": "2026-06-14 04:54:04",
     "total_analyzed": 500
   },
   "data": [
@@ -171,6 +171,23 @@
       "est_next_payment": 4.5,
       "annual_dividend": 18.0,
       "sector": "Finance",
+      "tv_signal": "STRONG_BUY",
+      "score": 96
+    },
+    {
+      "symbol": "KLAC",
+      "name": "KLA Corporation",
+      "price": 254.54,
+      "slope": 6.9383,
+      "r_squared": 0.18,
+      "growth_5y_pct": 693.83,
+      "dividend_yield_pct": 3.61,
+      "start_price": 0,
+      "end_price": 254.54,
+      "ex_div_date": "2026-05-18",
+      "est_next_payment": 2.3,
+      "annual_dividend": 9.2,
+      "sector": "Electronic Technology",
       "tv_signal": "STRONG_BUY",
       "score": 96
     },
@@ -1616,23 +1633,6 @@
       "est_next_payment": 1.165,
       "annual_dividend": 4.66,
       "sector": "Utilities",
-      "tv_signal": "STRONG_BUY",
-      "score": 79
-    },
-    {
-      "symbol": "KLAC",
-      "name": "KLA Corporation",
-      "price": 254.54,
-      "slope": 6.9383,
-      "r_squared": 0.18,
-      "growth_5y_pct": 693.83,
-      "dividend_yield_pct": 0.36,
-      "start_price": 0,
-      "end_price": 254.54,
-      "ex_div_date": "2026-05-18",
-      "est_next_payment": 0.23,
-      "annual_dividend": 0.92,
-      "sector": "Electronic Technology",
       "tv_signal": "STRONG_BUY",
       "score": 79
     },
@@ -3711,23 +3711,6 @@
       "score": 64
     },
     {
-      "symbol": "SW",
-      "name": "Smurfit Westrock PLC",
-      "price": 43.32,
-      "slope": -0.2345,
-      "r_squared": 0.24,
-      "growth_5y_pct": -23.45,
-      "dividend_yield_pct": 4.18,
-      "start_price": 0,
-      "end_price": 43.32,
-      "ex_div_date": "2026-05-15",
-      "est_next_payment": 0.452,
-      "annual_dividend": 1.81,
-      "sector": "Process Industries",
-      "tv_signal": "STRONG_BUY",
-      "score": 64
-    },
-    {
       "symbol": "WM",
       "name": "Waste Management, Inc.",
       "price": 219.45,
@@ -3802,12 +3785,12 @@
       "slope": 0.7821,
       "r_squared": 0.3,
       "growth_5y_pct": 78.21,
-      "dividend_yield_pct": 0.97,
+      "dividend_yield_pct": 0.95,
       "start_price": 0,
       "end_price": 164.94,
       "ex_div_date": "2026-06-05",
-      "est_next_payment": 0.402,
-      "annual_dividend": 1.61,
+      "est_next_payment": 0.393,
+      "annual_dividend": 1.57,
       "sector": "Consumer Services",
       "tv_signal": "NEUTRAL",
       "score": 63
@@ -3895,6 +3878,23 @@
       "annual_dividend": 1.72,
       "sector": "Health Technology",
       "tv_signal": "BUY",
+      "score": 63
+    },
+    {
+      "symbol": "SW",
+      "name": "Smurfit Westrock PLC",
+      "price": 43.32,
+      "slope": -0.2345,
+      "r_squared": 0.24,
+      "growth_5y_pct": -23.45,
+      "dividend_yield_pct": 3.98,
+      "start_price": 0,
+      "end_price": 43.32,
+      "ex_div_date": "2026-05-15",
+      "est_next_payment": 0.431,
+      "annual_dividend": 1.72,
+      "sector": "Process Industries",
+      "tv_signal": "STRONG_BUY",
       "score": 63
     },
     {
@@ -4210,12 +4210,12 @@
       "slope": 11.2594,
       "r_squared": 0.14,
       "growth_5y_pct": 1125.94,
-      "dividend_yield_pct": 0.05,
+      "dividend_yield_pct": 0.06,
       "start_price": 0,
       "end_price": 981.61,
       "ex_div_date": "2026-03-30",
-      "est_next_payment": 0.124,
-      "annual_dividend": 0.49,
+      "est_next_payment": 0.15,
+      "annual_dividend": 0.6,
       "sector": "Electronic Technology",
       "tv_signal": "BUY",
       "score": 61
@@ -4320,23 +4320,6 @@
       "annual_dividend": 2.8,
       "sector": "Finance",
       "tv_signal": "BUY",
-      "score": 60
-    },
-    {
-      "symbol": "CME",
-      "name": "CME Group Inc. Class A",
-      "price": 269.53,
-      "slope": 0.2659,
-      "r_squared": 0.36,
-      "growth_5y_pct": 26.59,
-      "dividend_yield_pct": 4.17,
-      "start_price": 0,
-      "end_price": 269.53,
-      "ex_div_date": "2026-06-09",
-      "est_next_payment": 2.812,
-      "annual_dividend": 11.25,
-      "sector": "Finance",
-      "tv_signal": "SELL",
       "score": 60
     },
     {
@@ -5562,6 +5545,23 @@
       "sector": "Distribution Services",
       "tv_signal": "BUY",
       "score": 50
+    },
+    {
+      "symbol": "CME",
+      "name": "CME Group Inc. Class A",
+      "price": 269.53,
+      "slope": 0.2659,
+      "r_squared": 0.36,
+      "growth_5y_pct": 26.59,
+      "dividend_yield_pct": 1.87,
+      "start_price": 0,
+      "end_price": 269.53,
+      "ex_div_date": "2026-06-09",
+      "est_next_payment": 1.262,
+      "annual_dividend": 5.05,
+      "sector": "Finance",
+      "tv_signal": "SELL",
+      "score": 49
     },
     {
       "symbol": "MA",
