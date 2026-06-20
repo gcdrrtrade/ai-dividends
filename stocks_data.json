@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-06-19 05:07:14",
+    "last_updated": "2026-06-20 04:19:42",
     "total_analyzed": 500
   },
   "data": [
@@ -504,12 +504,12 @@
       "slope": 2.9391,
       "r_squared": 0.46,
       "growth_5y_pct": 293.91,
-      "dividend_yield_pct": 0.93,
+      "dividend_yield_pct": 0.92,
       "start_price": 0,
       "end_price": 221.77,
       "ex_div_date": "2026-04-01",
-      "est_next_payment": 0.516,
-      "annual_dividend": 2.06,
+      "est_next_payment": 0.511,
+      "annual_dividend": 2.04,
       "sector": "Distribution Services",
       "tv_signal": "BUY",
       "score": 86
@@ -2742,23 +2742,6 @@
       "score": 68
     },
     {
-      "symbol": "BKNG",
-      "name": "Booking Holdings Inc.",
-      "price": 171.78,
-      "slope": 0.9054,
-      "r_squared": 0.3,
-      "growth_5y_pct": 90.54,
-      "dividend_yield_pct": 0.94,
-      "start_price": 0,
-      "end_price": 171.78,
-      "ex_div_date": "2026-06-05",
-      "est_next_payment": 0.402,
-      "annual_dividend": 1.61,
-      "sector": "Consumer Services",
-      "tv_signal": "NEUTRAL",
-      "score": 68
-    },
-    {
       "symbol": "PNC",
       "name": "PNC Financial Services Group, Inc.",
       "price": 232.04,
@@ -2774,6 +2757,23 @@
       "sector": "Finance",
       "tv_signal": "BUY",
       "score": 68
+    },
+    {
+      "symbol": "BKNG",
+      "name": "Booking Holdings Inc.",
+      "price": 171.78,
+      "slope": 0.9054,
+      "r_squared": 0.3,
+      "growth_5y_pct": 90.54,
+      "dividend_yield_pct": 0.92,
+      "start_price": 0,
+      "end_price": 171.78,
+      "ex_div_date": "2026-06-05",
+      "est_next_payment": 0.393,
+      "annual_dividend": 1.57,
+      "sector": "Consumer Services",
+      "tv_signal": "NEUTRAL",
+      "score": 67
     },
     {
       "symbol": "HCA",
@@ -2825,6 +2825,23 @@
       "sector": "Electronic Technology",
       "tv_signal": "BUY",
       "score": 67
+    },
+    {
+      "symbol": "BX",
+      "name": "Blackstone Inc.",
+      "price": 123.79,
+      "slope": 0.2763,
+      "r_squared": 0.28,
+      "growth_5y_pct": 27.63,
+      "dividend_yield_pct": 3.83,
+      "start_price": 0,
+      "end_price": 123.79,
+      "ex_div_date": "2026-05-04",
+      "est_next_payment": 1.185,
+      "annual_dividend": 4.74,
+      "sector": "Finance",
+      "tv_signal": "BUY",
+      "score": 66
     },
     {
       "symbol": "DD",
@@ -3660,6 +3677,23 @@
       "score": 60
     },
     {
+      "symbol": "MRVL",
+      "name": "Marvell Technology, Inc.",
+      "price": 310.58,
+      "slope": 4.7197,
+      "r_squared": 0.1,
+      "growth_5y_pct": 471.97,
+      "dividend_yield_pct": 0.08,
+      "start_price": 0,
+      "end_price": 310.58,
+      "ex_div_date": "2026-04-10",
+      "est_next_payment": 0.06,
+      "annual_dividend": 0.24,
+      "sector": "Electronic Technology",
+      "tv_signal": "STRONG_BUY",
+      "score": 60
+    },
+    {
       "symbol": "PPL",
       "name": "PPL Corporation",
       "price": 35.38,
@@ -3708,23 +3742,6 @@
       "annual_dividend": 3.0,
       "sector": "Utilities",
       "tv_signal": "SELL",
-      "score": 59
-    },
-    {
-      "symbol": "BX",
-      "name": "Blackstone Inc.",
-      "price": 123.79,
-      "slope": 0.2763,
-      "r_squared": 0.28,
-      "growth_5y_pct": 27.63,
-      "dividend_yield_pct": 2.43,
-      "start_price": 0,
-      "end_price": 123.79,
-      "ex_div_date": "2026-05-04",
-      "est_next_payment": 0.753,
-      "annual_dividend": 3.01,
-      "sector": "Finance",
-      "tv_signal": "BUY",
       "score": 59
     },
     {
@@ -4269,23 +4286,6 @@
       "annual_dividend": 3.84,
       "sector": "Retail Trade",
       "tv_signal": "BUY",
-      "score": 54
-    },
-    {
-      "symbol": "CME",
-      "name": "CME Group Inc. Class A",
-      "price": 246.38,
-      "slope": 0.1554,
-      "r_squared": 0.32,
-      "growth_5y_pct": 15.54,
-      "dividend_yield_pct": 4.57,
-      "start_price": 0,
-      "end_price": 246.38,
-      "ex_div_date": "2026-06-09",
-      "est_next_payment": 2.812,
-      "annual_dividend": 11.25,
-      "sector": "Finance",
-      "tv_signal": "STRONG_SELL",
       "score": 54
     },
     {
@@ -5428,23 +5428,6 @@
       "score": 48
     },
     {
-      "symbol": "POOL",
-      "name": "Pool Corporation",
-      "price": 198.99,
-      "slope": -0.5502,
-      "r_squared": 0.26,
-      "growth_5y_pct": -55.02,
-      "dividend_yield_pct": 2.61,
-      "start_price": 0,
-      "end_price": 198.99,
-      "ex_div_date": "2026-05-14",
-      "est_next_payment": 1.3,
-      "annual_dividend": 5.2,
-      "sector": "Distribution Services",
-      "tv_signal": "BUY",
-      "score": 48
-    },
-    {
       "symbol": "TSN",
       "name": "Tyson Foods, Inc. Class A",
       "price": 55.46,
@@ -5560,23 +5543,6 @@
       "est_next_payment": 0.63,
       "annual_dividend": 2.52,
       "sector": "Health Technology",
-      "tv_signal": "SELL",
-      "score": 46
-    },
-    {
-      "symbol": "CPB",
-      "name": "Campbell's Company",
-      "price": 21.15,
-      "slope": -0.5336,
-      "r_squared": 0.29,
-      "growth_5y_pct": -53.36,
-      "dividend_yield_pct": 7.38,
-      "start_price": 0,
-      "end_price": 21.15,
-      "ex_div_date": "2026-04-02",
-      "est_next_payment": 0.39,
-      "annual_dividend": 1.56,
-      "sector": "Consumer Non-Durables",
       "tv_signal": "SELL",
       "score": 46
     },
@@ -5833,6 +5799,23 @@
       "annual_dividend": 2.88,
       "sector": "Finance",
       "tv_signal": "NEUTRAL",
+      "score": 44
+    },
+    {
+      "symbol": "CME",
+      "name": "CME Group Inc. Class A",
+      "price": 246.38,
+      "slope": 0.1554,
+      "r_squared": 0.32,
+      "growth_5y_pct": 15.54,
+      "dividend_yield_pct": 2.05,
+      "start_price": 0,
+      "end_price": 246.38,
+      "ex_div_date": "2026-06-09",
+      "est_next_payment": 1.262,
+      "annual_dividend": 5.05,
+      "sector": "Finance",
+      "tv_signal": "STRONG_SELL",
       "score": 44
     },
     {
