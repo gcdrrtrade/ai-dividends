@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-06-21 05:03:29",
+    "last_updated": "2026-06-22 05:12:10",
     "total_analyzed": 500
   },
   "data": [
@@ -1663,7 +1663,7 @@
       "dividend_yield_pct": 0.63,
       "start_price": 0,
       "end_price": 411.35,
-      "ex_div_date": "2026-03-23",
+      "ex_div_date": "2026-06-22",
       "est_next_payment": 0.65,
       "annual_dividend": 2.6,
       "sector": "Electronic Technology",
@@ -1765,7 +1765,7 @@
       "dividend_yield_pct": 0.56,
       "start_price": 0,
       "end_price": 163.75,
-      "ex_div_date": "2026-03-20",
+      "ex_div_date": "2026-06-22",
       "est_next_payment": 0.229,
       "annual_dividend": 0.92,
       "sector": "Utilities",
@@ -2394,7 +2394,7 @@
       "dividend_yield_pct": 3.16,
       "start_price": 0,
       "end_price": 147.56,
-      "ex_div_date": "2026-03-16",
+      "ex_div_date": "2026-06-22",
       "est_next_payment": 1.165,
       "annual_dividend": 4.66,
       "sector": "Utilities",
@@ -4468,7 +4468,7 @@
       "dividend_yield_pct": 1.5,
       "start_price": 0,
       "end_price": 326.2,
-      "ex_div_date": "2026-03-09",
+      "ex_div_date": "2026-06-22",
       "est_next_payment": 1.22,
       "annual_dividend": 4.88,
       "sector": "Transportation",
@@ -5233,7 +5233,7 @@
       "dividend_yield_pct": 0.39,
       "start_price": 0,
       "end_price": 61.03,
-      "ex_div_date": "2026-03-13",
+      "ex_div_date": "2026-06-22",
       "est_next_payment": 0.06,
       "annual_dividend": 0.24,
       "sector": "Electronic Technology",
