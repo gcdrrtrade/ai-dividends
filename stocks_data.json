@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-07-11 03:25:37",
+    "last_updated": "2026-07-12 03:37:08",
     "total_analyzed": 500
   },
   "data": [
@@ -5832,6 +5832,23 @@
       "est_next_payment": 1.452,
       "annual_dividend": 5.81,
       "sector": "Consumer Non-Durables",
+      "tv_signal": "SELL",
+      "score": 46
+    },
+    {
+      "symbol": "HON",
+      "name": "Honeywell International Inc.",
+      "price": 226.42,
+      "slope": 0.0286,
+      "r_squared": 0.27,
+      "growth_5y_pct": 2.86,
+      "dividend_yield_pct": 4.2,
+      "start_price": 0,
+      "end_price": 226.42,
+      "ex_div_date": "2026-05-15",
+      "est_next_payment": 2.38,
+      "annual_dividend": 9.52,
+      "sector": "Electronic Technology",
       "tv_signal": "SELL",
       "score": 46
     },
