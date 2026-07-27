@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2026-07-26 03:38:24",
+    "last_updated": "2026-07-27 03:47:59",
     "total_analyzed": 500
   },
   "data": [
@@ -864,7 +864,7 @@
       "dividend_yield_pct": 1.59,
       "start_price": 0,
       "end_price": 158.91,
-      "ex_div_date": "2026-04-27",
+      "ex_div_date": "2026-07-27",
       "est_next_payment": 0.63,
       "annual_dividend": 2.52,
       "sector": "Finance",
